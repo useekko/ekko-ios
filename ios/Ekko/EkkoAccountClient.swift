@@ -1,8 +1,7 @@
-// EkkoAccountClient.swift — self-contained client for the Ekko demo account backend.
+// EkkoAccountClient.swift — self-contained client for the Ekko account backend.
 // Drag this ONE file into the app target; zero dependencies (URLSession,
 // ASWebAuthenticationSession, Keychain). Server contract + curl reference:
-// docs/ACCOUNTS.md. Registration is closed server-side; invite users with
-// scripts/account-users.mjs.
+// docs/ACCOUNTS.md. Registration is open during the public alpha.
 //
 // Wiring:
 //   1. Target > Info > URL Types: add URL scheme "ekko" (needed for both the
@@ -100,7 +99,7 @@ enum EkkoError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .notSignedIn: return "Not signed in."
-        case .inviteOnly: return "This demo is invite-only."
+        case .inviteOnly: return "Sign-up is temporarily unavailable."
         case .expiredOrInvalid: return "That link or code expired. Request a fresh one."
         case .conflict: return "Already exists."
         case .notPermitted: return "Not allowed."
@@ -159,13 +158,13 @@ final class EkkoAccount: ObservableObject {
         try adoptSession(fromCallback: callbackURL)
     }
 
-    /// Emails a one-time link (and an 8-digit code) to an INVITED address.
+    /// Emails a one-time link (and an 8-digit code). New addresses create accounts.
     /// Links expire in 1 hour and are single-use; the code is the reliable path.
     func sendMagicLink(to email: String) async throws {
         _ = try await authPOST(
             path: "/auth/v1/otp",
             query: [URLQueryItem(name: "redirect_to", value: Self.callback)],
-            body: ["email": email, "create_user": false]
+            body: ["email": email, "create_user": true]
         )
     }
 

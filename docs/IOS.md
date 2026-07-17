@@ -356,11 +356,12 @@ Server side (table, RLS, and three traps that cost real time): `docs/ACCOUNTS.md
   interop-proven, but the extension has no account sign-in (it would need Supabase auth via
   `chrome.identity.launchWebAuthFlow`), so nothing calls it there. Until that lands, the way to put
   the same identity in the extension and the app is the 24 words — which is exact, and works today.
-- **The account path is not covered end to end by a test.** Registration is closed (invite-only), so
-  `OnboardingFlowTests` drives the *off-grid* road all the way through and asserts the fork offers
+- **The account path is not covered end to end by a UI test.** Registration is open, but external
+  provider and inbox handoffs are not deterministic simulator fixtures. `OnboardingFlowTests`
+  drives the *off-grid* road all the way through and asserts the fork offers
   both mode cards, that the handle road leads to Apple + Google + email sign-in, and that no handle
-  claim exists anywhere before a session does. Signing in needs an invited address;
-  `scripts/account-smoke.mjs` covers the server side. **Google and Apple sign-in are live**
+  claim exists anywhere before a session does. `scripts/account-smoke.mjs` covers the server side.
+  **Google and Apple sign-in are live**
   (providers on — Apple verified against the live project 2026-07-16, client id = the app bundle
   id), and the buttons are wired, but **nobody has clicked either through on a device yet**: the
   `ASWebAuthenticationSession` round trip and the Apple sheet are the parts no simulator test here
