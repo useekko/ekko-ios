@@ -26,7 +26,7 @@ protocol HostTextField: AnyObject {
 @Observable
 @MainActor
 final class KeyboardModel {
-    enum Plane { case letters, numbers, symbols, emoji }
+    enum Plane: Equatable { case letters, numbers, symbols, emoji }
 
     /// What the private reader is currently showing.
     enum Decrypted {

@@ -12,10 +12,18 @@ enum NativeKeyboardPlane: String, CaseIterable {
     case emoji
 }
 
+enum NativeKeyboardReturnStyle {
+    case standard
+    case done
+}
+
 /// Public measurements exposed to the lab report. The values are intentionally few: every key
 /// frame is derived from the keyboard bounds, so the same component adapts to each iPhone width.
 enum NativeKeyboardMetrics {
     static let planeHeight: CGFloat = 225
+    /// The current native Emoji input surface is 399pt on a portrait Pro Max: 53 search,
+    /// 218 catalog, 60 category rail, and 68 footer.
+    static let emojiPlaneHeight: CGFloat = 399
     static let horizontalInset: CGFloat = 20 / 3
     static let horizontalGap: CGFloat = 6
     static let verticalGap: CGFloat = 11
@@ -34,6 +42,7 @@ struct NativeKeyPlaneView: View {
 
     var showsGlobe: Bool
     var showsEmoji: Bool
+    var returnStyle: NativeKeyboardReturnStyle = .standard
     var onText: (String) -> Void
     var onBackspace: () -> Void
     var onNextKeyboard: () -> Void
@@ -45,8 +54,10 @@ struct NativeKeyPlaneView: View {
             if plane == .emoji {
                 NativeEmojiPlaneView(
                     plane: $plane,
+                    showsGlobe: showsGlobe,
                     onText: onText,
-                    onBackspace: onBackspace
+                    onBackspace: onBackspace,
+                    onNextKeyboard: onNextKeyboard
                 )
             } else {
                 GeometryReader { geometry in
@@ -56,7 +67,8 @@ struct NativeKeyPlaneView: View {
                         shifted: shifted || capsLock,
                         capsLock: capsLock,
                         showsGlobe: showsGlobe,
-                        showsEmoji: showsEmoji
+                        showsEmoji: showsEmoji,
+                        returnStyle: returnStyle
                     )
 
                     ZStack(alignment: .topLeading) {
@@ -78,7 +90,11 @@ struct NativeKeyPlaneView: View {
                 }
             }
         }
-        .frame(height: NativeKeyboardMetrics.planeHeight)
+        .frame(
+            height: plane == .emoji
+                ? NativeKeyboardMetrics.emojiPlaneHeight
+                : NativeKeyboardMetrics.planeHeight
+        )
     }
 
     private func activate(_ action: NativeKeyboardKey.Action) {
@@ -137,6 +153,7 @@ private struct NativeKeyboardKey: Identifiable {
     enum Surface {
         case character
         case modifier
+        case action
     }
 
     let id: String
@@ -166,7 +183,8 @@ private enum NativeKeyboardLayout {
         shifted: Bool,
         capsLock: Bool,
         showsGlobe: Bool,
-        showsEmoji: Bool
+        showsEmoji: Bool,
+        returnStyle: NativeKeyboardReturnStyle
     ) -> [NativeKeyboardKey] {
         guard size.width > 0, size.height > 0 else { return [] }
 
@@ -377,10 +395,10 @@ private enum NativeKeyboardLayout {
             NativeKeyboardKey(
                 id: "return",
                 label: nil,
-                symbol: "return",
-                spoken: "Return",
+                symbol: returnStyle == .done ? "checkmark" : "return",
+                spoken: returnStyle == .done ? "Done" : "Return",
                 action: .text("\n"),
-                surface: .modifier,
+                surface: returnStyle == .done ? .action : .modifier,
                 active: false,
                 repeats: false,
                 frame: CGRect(x: returnX, y: bottomY, width: returnWidth, height: keyHeight)
@@ -402,7 +420,6 @@ private struct NativeKeyCap: View {
     let key: NativeKeyboardKey
     let action: () -> Void
 
-    @Environment(\.colorScheme) private var colorScheme
     @State private var pressed = false
     @State private var repeatTask: Task<Void, Never>?
 
@@ -417,7 +434,7 @@ private struct NativeKeyCap: View {
                     trailing: NativeKeyboardMetrics.hitTrailing
                 )
             )
-            .foregroundStyle(Ink.keyboardInk)
+            .foregroundStyle(key.surface == .action ? Color.white : Ink.keyboardInk)
             .contentShape(Rectangle())
             .zIndex(pressed ? 20 : 0)
             .gesture(
@@ -437,11 +454,6 @@ private struct NativeKeyCap: View {
         ZStack {
             RoundedRectangle(cornerRadius: NativeKeyboardMetrics.cornerRadius, style: .continuous)
                 .fill(pressed ? Ink.keyPressed : fill)
-                .shadow(
-                    color: .black.opacity(pressed ? 0.08 : (colorScheme == .dark ? 0.32 : 0.28)),
-                    radius: 0,
-                    y: pressed ? 0 : 1
-                )
 
             if let symbol = key.symbol {
                 Image(systemName: symbol)
@@ -493,8 +505,14 @@ private struct NativeKeyCap: View {
     }
 
     private var fill: Color {
-        if key.surface == .modifier, !key.active { return Ink.keyModifier }
-        return Ink.key
+        switch key.surface {
+        case .character:
+            return Ink.key
+        case .modifier:
+            return key.active ? Ink.key : Ink.keyModifier
+        case .action:
+            return Ink.keyboardAction
+        }
     }
 
     private func font(for label: String) -> Font {
@@ -507,7 +525,7 @@ private struct NativeKeyCap: View {
     private func symbolSize(_ symbol: String) -> CGFloat {
         switch symbol {
         case "globe", "face.smiling": 19
-        case "return": 24
+        case "return", "checkmark": 24
         case "shift", "shift.fill": 22
         default: 21
         }

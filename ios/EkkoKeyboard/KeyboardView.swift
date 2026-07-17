@@ -2,17 +2,19 @@ import EkkoCore
 import SwiftUI
 import UIKit
 
-// Ekko has two deliberate states inside one fixed keyboard envelope:
+// Ekko has three deliberate surfaces:
 //
 //   compose -> recipient, Paste, Seal, then a familiar QWERTY plane
+//   emoji   -> the native-height Emoji browser without app chrome competing for space
 //   read    -> a private full-height reader; plaintext never enters the host composer
 //
-// Keeping the height constant prevents the messenger from jumping when a copied message opens.
-// The key plane intentionally stays small in scope: no autocorrect, swipe typing, or dictation.
+// Compose/read share one fixed envelope. Emoji uses the measured system Emoji height because
+// squeezing five rows, search, categories, and the footer into the QWERTY height is not parity.
 
 struct KeyboardView: View {
     @Bindable var model: KeyboardModel
     var showsGlobe: Bool
+    var onHeightChange: (CGFloat) -> Void
 
     var body: some View {
         ZStack {
@@ -27,8 +29,15 @@ struct KeyboardView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Ink.keyBacking)
         .animation(.easeOut(duration: 0.2), value: model.readerVisible)
+        .onAppear { onHeightChange(desiredHeight) }
+        .onChange(of: desiredHeight) { _, height in onHeightChange(height) }
         // Do not put an accessibility identifier here. SwiftUI containers pass identifiers down
         // to every descendant, which would make all letter keys expose the same identifier.
+    }
+
+    private var desiredHeight: CGFloat {
+        if model.readerVisible { return 270 }
+        return model.plane == .emoji ? NativeKeyboardMetrics.emojiPlaneHeight : 270
     }
 }
 
@@ -39,11 +48,17 @@ private struct ComposeKeyboard: View {
     var showsGlobe: Bool
 
     var body: some View {
-        VStack(spacing: 0) {
-            CompactBar(model: model)
-            Rectangle().fill(Ink.keyboardLine).frame(height: 1)
-            KeyPlaneView(model: model, showsGlobe: showsGlobe)
-                .padding(.vertical, 1)
+        Group {
+            if model.plane == .emoji {
+                KeyPlaneView(model: model, showsGlobe: showsGlobe)
+            } else {
+                VStack(spacing: 0) {
+                    CompactBar(model: model)
+                    Rectangle().fill(Ink.keyboardLine).frame(height: 1)
+                    KeyPlaneView(model: model, showsGlobe: showsGlobe)
+                        .padding(.vertical, 1)
+                }
+            }
         }
         .background(Ink.keyBacking)
     }

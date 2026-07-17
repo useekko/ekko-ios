@@ -81,6 +81,7 @@ final class KeyboardParityTests: XCTestCase {
     @MainActor
     func testAppleAndReplicaEmojiSurfaces() throws {
         let app = XCUIApplication()
+        app.launchEnvironment["LAB_RESET_EMOJI_RECENTS"] = "1"
         app.launchArguments += ["-AppleLanguages", "(en-US)", "-AppleLocale", "en_US"]
         app.launch()
 
@@ -93,19 +94,24 @@ final class KeyboardParityTests: XCTestCase {
             NSPredicate(format: "label CONTAINS[c] 'grinning' OR label == '😀'")
         ).firstMatch
         XCTAssertTrue(emoji.waitForExistence(timeout: 8), "Apple Emoji reference did not appear")
+        let appleGeometry = emojiGeometry(in: app, replica: false)
         addImage(XCUIScreen.main.screenshot().image, name: "apple-emoji-reference")
+        addTree(app, name: "apple-emoji-accessibility-tree")
 
         app.segmentedControls["keyboard-mode"].buttons["Replica"].tap()
         XCTAssertTrue(app.buttons["emoji-category-recent"].waitForExistence(timeout: 8))
+        let replicaGeometry = emojiGeometry(in: app, replica: true)
+        assertEmojiGeometry(replicaGeometry, matches: appleGeometry, appearance: "light")
         addImage(XCUIScreen.main.screenshot().image, name: "replica-emoji")
+        addTree(app, name: "replica-emoji-accessibility-tree")
 
-        let tears = app.descendants(matching: .any)["emoji-😂"]
+        let tears = hittable(in: app, identifier: "emoji-😂")
         XCTAssertTrue(tears.waitForExistence(timeout: 5))
         tears.tap()
         waitForEditorValue("😂", editor: editor)
 
         app.buttons["emoji-category-animals"].tap()
-        let monkey = app.descendants(matching: .any)["emoji-🐵"]
+        let monkey = hittable(in: app, identifier: "emoji-🐵")
         XCTAssertTrue(monkey.waitForExistence(timeout: 5))
         monkey.tap()
         waitForEditorValue("😂🐵", editor: editor)
@@ -118,6 +124,192 @@ final class KeyboardParityTests: XCTestCase {
             NSPredicate(format: "identifier == 'Emoji'")
         ).firstMatch.tap()
         XCTAssertTrue(app.buttons["emoji-category-recent"].waitForExistence(timeout: 5))
+
+        // A zero-distance gesture on each cell used to win against the enclosing ScrollView,
+        // making a finger swipe merely highlight one Emoji without moving the catalog.
+        let gridStart = hittable(in: app, identifier: "emoji-😀")
+        XCTAssertTrue(gridStart.waitForExistence(timeout: 5))
+        app.buttons["emoji-category-smileys"].tap()
+        XCTAssertEqual(gridStart.frame.minX, 12, accuracy: 1)
+        let gridY = gridStart.frame.midY / app.frame.height
+        app.coordinate(withNormalizedOffset: CGVector(dx: 0.82, dy: gridY))
+            .press(
+                forDuration: 0.08,
+                thenDragTo: app.coordinate(
+                    withNormalizedOffset: CGVector(dx: 0.18, dy: gridY)
+                ),
+                withVelocity: .fast,
+                thenHoldForDuration: 0
+            )
+        let revealed = hittable(in: app, identifier: "emoji-🤭")
+        XCTAssertTrue(revealed.waitForExistence(timeout: 5))
+        XCTAssertTrue(revealed.isHittable, "Emoji catalog did not move after a horizontal swipe")
+        addImage(XCUIScreen.main.screenshot().image, name: "replica-emoji-after-swipe")
+    }
+
+    @MainActor
+    func testDarkAppleAndReplicaEmojiGeometry() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment["LAB_APPEARANCE"] = "dark"
+        app.launchEnvironment["LAB_RESET_EMOJI_RECENTS"] = "1"
+        app.launchArguments += ["-AppleLanguages", "(en-US)", "-AppleLocale", "en_US"]
+        app.launch()
+
+        let editor = app.textViews["lab-editor"]
+        XCTAssertTrue(editor.waitForExistence(timeout: 10))
+        editor.tap()
+        app.segmentedControls["keyboard-surface"].buttons["Emoji"].tap()
+        let emoji = app.descendants(matching: .any).matching(
+            NSPredicate(format: "label CONTAINS[c] 'grinning' OR label == '😀'")
+        ).firstMatch
+        XCTAssertTrue(emoji.waitForExistence(timeout: 8))
+        let apple = emojiGeometry(in: app, replica: false)
+        addImage(XCUIScreen.main.screenshot().image, name: "apple-emoji-dark")
+
+        app.segmentedControls["keyboard-mode"].buttons["Replica"].tap()
+        XCTAssertTrue(app.buttons["emoji-category-recent"].waitForExistence(timeout: 8))
+        let replica = emojiGeometry(in: app, replica: true)
+        assertEmojiGeometry(replica, matches: apple, appearance: "dark")
+        addImage(XCUIScreen.main.screenshot().image, name: "replica-emoji-dark")
+    }
+
+    /// Compares the public Search Emoji transition and proves local query input never reaches the
+    /// host composer before a result is deliberately selected.
+    @MainActor
+    func testAppleAndReplicaEmojiSearch() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment["LAB_RESET_EMOJI_RECENTS"] = "1"
+        app.launchArguments += ["-AppleLanguages", "(en-US)", "-AppleLocale", "en_US"]
+        app.launch()
+
+        let editor = app.textViews["lab-editor"]
+        XCTAssertTrue(editor.waitForExistence(timeout: 10))
+        editor.tap()
+        app.segmentedControls["keyboard-surface"].buttons["Emoji"].tap()
+
+        let search = app.textFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 8))
+        search.tap()
+        addImage(XCUIScreen.main.screenshot().image, name: "apple-emoji-search-empty")
+        addTree(app, name: "apple-emoji-search-empty-tree")
+
+        search.typeText("heart")
+        XCTAssertEqual(search.value as? String, "heart")
+        let appleGeometry = emojiSearchGeometry(in: app, replica: false)
+        addImage(XCUIScreen.main.screenshot().image, name: "apple-emoji-search-heart")
+        addTree(app, name: "apple-emoji-search-heart-tree")
+
+        app.segmentedControls["keyboard-mode"].buttons["Replica"].tap()
+        let replicaSearch = app.buttons["emoji-search"]
+        XCTAssertTrue(replicaSearch.waitForExistence(timeout: 8))
+        replicaSearch.tap()
+        XCTAssertTrue(key(in: app, names: ["q"]).waitForExistence(timeout: 5))
+
+        for letter in ["h", "e", "a", "r", "t"] {
+            key(in: app, names: [letter]).tap()
+        }
+        let heart = hittable(in: app, identifier: "emoji-search-result-❤️")
+        XCTAssertTrue(heart.waitForExistence(timeout: 5))
+        XCTAssertEqual(editor.value as? String ?? "", "", "Search text leaked into the host")
+
+        let replicaGeometry = emojiSearchGeometry(in: app, replica: true)
+        assertGeometry(
+            replicaGeometry,
+            matches: appleGeometry,
+            names: ["root", "search", "result", "q", "delete", "done", "footer"],
+            appearance: "light search"
+        )
+        addImage(XCUIScreen.main.screenshot().image, name: "replica-emoji-search-heart")
+        addTree(app, name: "replica-emoji-search-heart-tree")
+
+        heart.tap()
+        waitForEditorValue("❤️", editor: editor)
+        app.buttons["emoji-search-close"].tap()
+        XCTAssertTrue(app.buttons["emoji-category-recent"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testAppleAndReplicaEmojiTonePicker() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(en-US)", "-AppleLocale", "en_US"]
+        app.launch()
+
+        let editor = app.textViews["lab-editor"]
+        XCTAssertTrue(editor.waitForExistence(timeout: 10))
+        editor.tap()
+        app.segmentedControls["keyboard-surface"].buttons["Emoji"].tap()
+
+        let thumb = app.descendants(matching: .any).matching(
+            NSPredicate(format: "label == '👍'")
+        ).firstMatch
+        XCTAssertTrue(thumb.waitForExistence(timeout: 8))
+        thumb.press(forDuration: 0.8)
+        let acknowledgement = app.buttons["OK"]
+        if acknowledgement.waitForExistence(timeout: 1) {
+            acknowledgement.tap()
+            XCTAssertTrue(thumb.waitForExistence(timeout: 5))
+            thumb.press(forDuration: 0.8)
+        }
+        addImage(XCUIScreen.main.screenshot().image, name: "apple-emoji-tone-picker")
+        addTree(app, name: "apple-emoji-tone-picker-tree")
+
+        app.segmentedControls["keyboard-mode"].buttons["Replica"].tap()
+        let replicaThumb = hittable(in: app, identifier: "emoji-👍")
+        XCTAssertTrue(replicaThumb.waitForExistence(timeout: 8))
+        replicaThumb.press(forDuration: 0.8)
+
+        let mediumTone = hittable(in: app, identifier: "emoji-tone-👍🏽")
+        XCTAssertTrue(mediumTone.waitForExistence(timeout: 5))
+        addImage(XCUIScreen.main.screenshot().image, name: "replica-emoji-tone-picker")
+        addTree(app, name: "replica-emoji-tone-picker-tree")
+        mediumTone.tap()
+        waitForEditorValue("👍🏽", editor: editor)
+
+        // Releasing a long press must suppress only that release, never swallow the next tap.
+        let baseAfterTone = hittable(in: app, identifier: "emoji-👍")
+        XCTAssertTrue(baseAfterTone.waitForExistence(timeout: 5))
+        baseAfterTone.tap()
+        waitForEditorValue("👍🏽👍", editor: editor)
+    }
+
+    @MainActor
+    func testReplicaEmojiSwipeAndCategoryAnchors() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment["LAB_RESET_EMOJI_RECENTS"] = "1"
+        app.launchArguments += ["-AppleLanguages", "(en-US)", "-AppleLocale", "en_US"]
+        app.launch()
+
+        let editor = app.textViews["lab-editor"]
+        XCTAssertTrue(editor.waitForExistence(timeout: 10))
+        editor.tap()
+        app.segmentedControls["keyboard-surface"].buttons["Emoji"].tap()
+        app.segmentedControls["keyboard-mode"].buttons["Replica"].tap()
+        XCTAssertTrue(app.buttons["emoji-category-recent"].waitForExistence(timeout: 8))
+
+        let first = hittable(in: app, identifier: "emoji-😀")
+        XCTAssertTrue(first.waitForExistence(timeout: 5))
+        XCTAssertEqual(first.frame.minX, 284, accuracy: 1)
+        app.buttons["emoji-category-smileys"].tap()
+        XCTAssertEqual(first.frame.minX, 12, accuracy: 1)
+        let editorBefore = editor.value as? String ?? ""
+        let rowY = first.frame.midY / app.frame.height
+
+        app.coordinate(withNormalizedOffset: CGVector(dx: 0.82, dy: rowY))
+            .press(
+                forDuration: 0.08,
+                thenDragTo: app.coordinate(
+                    withNormalizedOffset: CGVector(dx: 0.18, dy: rowY)
+                ),
+                withVelocity: .fast,
+                thenHoldForDuration: 0
+            )
+
+        XCTAssertEqual(editor.value as? String ?? "", editorBefore, "A swipe inserted Emoji")
+        let revealed = hittable(in: app, identifier: "emoji-🤭")
+        XCTAssertTrue(revealed.waitForExistence(timeout: 5))
+        XCTAssertTrue(revealed.isHittable)
+        revealed.tap()
+        waitForEditorValue("🤭", editor: editor)
     }
 
     @MainActor
@@ -300,6 +492,166 @@ final class KeyboardParityTests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    private func addTree(_ app: XCUIApplication, name: String) {
+        let attachment = XCTAttachment(string: app.debugDescription)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
+    private func emojiGeometry(
+        in app: XCUIApplication,
+        replica: Bool
+    ) -> [String: CGRect] {
+        let root = replica
+            ? app.descendants(matching: .any).matching(identifier: "replica-keyboard-plane").firstMatch
+            : app.descendants(matching: .any).matching(identifier: "inputView").firstMatch
+        XCTAssertTrue(root.exists, "Emoji input root is missing")
+
+        func element(identifier: String) -> XCUIElement {
+            let matches = app.descendants(matching: .any).matching(identifier: identifier)
+            var candidates: [XCUIElement] = []
+            for index in 0..<matches.count {
+                let candidate = matches.element(boundBy: index)
+                if candidate.exists, candidate.frame.intersects(root.frame) {
+                    candidates.append(candidate)
+                }
+            }
+            return candidates.min(by: { $0.frame.minX < $1.frame.minX }) ?? matches.firstMatch
+        }
+
+        func labeled(_ label: String) -> XCUIElement {
+            let matches = app.descendants(matching: .any).matching(
+                NSPredicate(format: "label == %@", label)
+            )
+            for index in 0..<matches.count {
+                let candidate = matches.element(boundBy: index)
+                if candidate.exists, candidate.frame.intersects(root.frame) { return candidate }
+            }
+            return matches.firstMatch
+        }
+
+        let search = replica ? element(identifier: "emoji-search") : app.textFields.firstMatch
+        let recent = element(identifier: replica ? "emoji-😂" : "😂")
+        let smileys = element(identifier: replica ? "emoji-😀" : "😀")
+        let category = replica
+            ? element(identifier: "emoji-category-recent")
+            : labeled("Frequently Used category")
+        let delete = element(identifier: replica ? "emoji-delete" : "delete")
+        let footer = replica ? element(identifier: "emoji-letters") : labeled("Next keyboard")
+
+        let elements = [
+            "search": search,
+            "recent": recent,
+            "smileys": smileys,
+            "category": category,
+            "delete": delete,
+            "footer": footer,
+        ]
+        var result = ["root": CGRect(origin: .zero, size: root.frame.size)]
+        for (name, element) in elements {
+            XCTAssertTrue(element.exists, "Missing Emoji geometry element: \(name)")
+            result[name] = element.frame.offsetBy(dx: -root.frame.minX, dy: -root.frame.minY)
+        }
+        return result
+    }
+
+    @MainActor
+    private func emojiSearchGeometry(
+        in app: XCUIApplication,
+        replica: Bool
+    ) -> [String: CGRect] {
+        let root = replica
+            ? app.descendants(matching: .any).matching(identifier: "replica-keyboard-plane").firstMatch
+            : app.descendants(matching: .any).matching(identifier: "inputView").firstMatch
+        XCTAssertTrue(root.exists, "Emoji search input root is missing")
+
+        func identified(_ identifier: String) -> XCUIElement {
+            let matches = app.descendants(matching: .any).matching(identifier: identifier)
+            for index in 0..<matches.count {
+                let candidate = matches.element(boundBy: index)
+                if candidate.exists, candidate.frame.intersects(root.frame) { return candidate }
+            }
+            return matches.firstMatch
+        }
+
+        func labeled(_ label: String) -> XCUIElement {
+            let matches = app.descendants(matching: .any).matching(
+                NSPredicate(format: "label == %@", label)
+            )
+            for index in 0..<matches.count {
+                let candidate = matches.element(boundBy: index)
+                if candidate.exists, candidate.frame.intersects(root.frame) { return candidate }
+            }
+            return matches.firstMatch
+        }
+
+        let elements: [String: XCUIElement] = [
+            "search": replica ? identified("emoji-search-active") : app.textFields.firstMatch,
+            "result": replica ? identified("emoji-search-result-❤️") : labeled("❤️"),
+            "q": key(in: app, names: ["q"]),
+            "delete": key(in: app, names: ["Delete", "delete"]),
+            "done": replica ? identified("Done") : identified("Done"),
+            "footer": replica ? identified("emoji-search-close") : labeled("Next keyboard"),
+        ]
+        var result = ["root": CGRect(origin: .zero, size: root.frame.size)]
+        for (name, element) in elements {
+            XCTAssertTrue(element.exists, "Missing Emoji search geometry element: \(name)")
+            result[name] = element.frame.offsetBy(dx: -root.frame.minX, dy: -root.frame.minY)
+        }
+        return result
+    }
+
+    private func assertEmojiGeometry(
+        _ replica: [String: CGRect],
+        matches apple: [String: CGRect],
+        appearance: String
+    ) {
+        assertGeometry(
+            replica,
+            matches: apple,
+            names: ["root", "search", "recent", "smileys", "category", "delete", "footer"],
+            appearance: appearance
+        )
+    }
+
+    private func assertGeometry(
+        _ replica: [String: CGRect],
+        matches apple: [String: CGRect],
+        names: [String],
+        appearance: String
+    ) {
+        for name in names {
+            guard let expected = apple[name], let actual = replica[name] else {
+                XCTFail("Missing \(appearance) Emoji geometry for \(name)")
+                continue
+            }
+            for (axis, delta) in [
+                ("x", abs(actual.minX - expected.minX)),
+                ("y", abs(actual.minY - expected.minY)),
+                ("width", abs(actual.width - expected.width)),
+                ("height", abs(actual.height - expected.height)),
+            ] {
+                XCTAssertLessThanOrEqual(
+                    delta,
+                    1,
+                    "\(appearance) Emoji \(name).\(axis) differs by \(delta)pt; Apple \(expected), replica \(actual)"
+                )
+            }
+        }
+    }
+
+    @MainActor
+    private func hittable(in app: XCUIApplication, identifier: String) -> XCUIElement {
+        let matches = app.descendants(matching: .any).matching(identifier: identifier)
+        for index in 0..<matches.count {
+            let candidate = matches.element(boundBy: index)
+            if candidate.exists, candidate.isHittable { return candidate }
+        }
+        return matches.firstMatch
     }
 }
 

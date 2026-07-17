@@ -148,8 +148,11 @@ final class KeyboardLabViewController: UIViewController {
     private func makeReplica() -> UIInputView {
         if let replicaInput { return replicaInput }
 
+        let replicaHeight = surface.selectedSegmentIndex == 1
+            ? NativeKeyboardMetrics.emojiPlaneHeight
+            : NativeKeyboardMetrics.planeHeight
         let input = UIInputView(
-            frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: NativeKeyboardMetrics.planeHeight),
+            frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: replicaHeight),
             inputViewStyle: .keyboard
         )
         input.backgroundColor = UIColor(Ink.keyBacking)
@@ -176,7 +179,7 @@ final class KeyboardLabViewController: UIViewController {
             host.view.leadingAnchor.constraint(equalTo: input.leadingAnchor),
             host.view.trailingAnchor.constraint(equalTo: input.trailingAnchor),
             host.view.topAnchor.constraint(equalTo: input.topAnchor),
-            host.view.heightAnchor.constraint(equalToConstant: NativeKeyboardMetrics.planeHeight),
+            host.view.heightAnchor.constraint(equalToConstant: replicaHeight),
         ])
         replicaInput = input
         replicaHost = host

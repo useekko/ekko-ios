@@ -19,6 +19,11 @@ touch-target delta, and exact primary/backing colors. The interaction test also 
 Shift, double-tap Caps Lock, every plane transition, Space, typing, tap Delete, and held-Delete
 repeat.
 
+Emoji runs compare the light/dark search field, five-row catalog, section positions, category rail,
+Delete, and footer against Apple's public surface to within 1pt. They also drive an actual fast
+horizontal swipe (and prove it neither stalls nor inserts a cell), every category anchor, local
+search without host-text leakage, recents, Delete, and the long-press skin-tone palette.
+
 This is clean-room observation of public rendered output. The lab does not inspect, link, or call
 private Apple keyboard implementation details. It compiles `../Shared/NativeKeyPlane.swift`
 directly, so a passing replica is the renderer shipped by `EkkoKeyboard`, not a lookalike test copy.

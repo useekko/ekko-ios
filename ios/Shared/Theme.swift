@@ -60,6 +60,16 @@ enum Ink {
     static let keyPressed = dynamic(light: 0xd3_d5d9, dark: 0x57_5757)
     static let keyBacking = dynamic(light: 0xe2_e4e8, dark: 0x17_1717)
     static let keyboardChrome = dynamic(light: 0xe2_e4e8, dark: 0x17_1717)
+    static let keyboardAction = dynamic(light: 0x0a_84ff, dark: 0x0a_84ff)
+    /// Measured from the public iOS 26.3 Emoji surface in KeyboardLab.
+    static let emojiSearch = dynamic(light: 0xef_f1f5, dark: 0x30_3030)
+    static let emojiSearchInk = dynamic(light: 0x89_8b8f, dark: 0x8c_8c8c)
+    static let emojiSelection = dynamic(light: 0xbd_c1ca, dark: 0x25_2525)
+    static let emojiCategorySelected = dynamic(light: 0x00_0000, dark: 0x8b_8b8b)
+    static let emojiCategoryIdle = dynamic(light: 0x71_7274, dark: 0x57_5757)
+    static let emojiSectionLabel = Color(hex: 0xa5_a6a9)
+    static let emojiDeleteInk = dynamic(light: 0x2b_2b2c, dark: 0xbe_bebe)
+    static let emojiFooterInk = dynamic(light: 0x39_393a, dark: 0xae_aeae)
     /// Plaintext opens on an opaque system-neutral surface, never onto the host app.
     static let readerBacking = dynamic(light: 0xfa_fafa, dark: 0x1c_1c1e)
 }

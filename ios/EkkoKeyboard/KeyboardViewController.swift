@@ -11,18 +11,23 @@ import UIKit
 // requests of any kind — directory lookups happen in the app, never here.
 
 final class KeyboardViewController: UIInputViewController, HostTextField {
-    /// One compact state bar (42) + hairline + measured key plane (227). The reader uses the same
-    /// 270pt envelope, so Ekko stays close to native height and never reserves space for idle advice.
-    private static let keyboardHeight: CGFloat = 270
+    /// One compact state bar (42) + hairline + measured key plane (227). The private reader uses
+    /// the same envelope; Emoji expands to its independently measured native 399pt surface.
+    private static let composeHeight: CGFloat = 270
 
     private let model = KeyboardModel()
     private var hosting: UIHostingController<KeyboardView>?
+    private var heightConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         model.start(host: self)
 
-        let root = KeyboardView(model: model, showsGlobe: needsInputModeSwitchKey)
+        let root = KeyboardView(
+            model: model,
+            showsGlobe: needsInputModeSwitchKey,
+            onHeightChange: { [weak self] height in self?.setKeyboardHeight(height) }
+        )
         let hc = UIHostingController(rootView: root)
         hc.view.backgroundColor = .clear
         addChild(hc)
@@ -38,9 +43,10 @@ final class KeyboardViewController: UIInputViewController, HostTextField {
         hosting = hc
 
         // Without this the input view collapses to the system default height and clips our chrome.
-        let h = view.heightAnchor.constraint(equalToConstant: Self.keyboardHeight)
+        let h = view.heightAnchor.constraint(equalToConstant: Self.composeHeight)
         h.priority = .required - 1
         h.isActive = true
+        heightConstraint = h
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -73,4 +79,16 @@ final class KeyboardViewController: UIInputViewController, HostTextField {
         textDocumentProxy.adjustTextPosition(byCharacterOffset: offset)
     }
     func nextKeyboard() { advanceToNextInputMode() }
+
+    private func setKeyboardHeight(_ height: CGFloat) {
+        guard let heightConstraint, abs(heightConstraint.constant - height) > 0.5 else { return }
+        heightConstraint.constant = height
+        UIView.animate(
+            withDuration: 0.22,
+            delay: 0,
+            options: [.beginFromCurrentState, .curveEaseOut]
+        ) {
+            self.view.superview?.layoutIfNeeded()
+        }
+    }
 }
