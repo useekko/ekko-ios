@@ -7,41 +7,34 @@ import UIKit
 ///
 /// iOS owns the system control's title and it is always "Paste", which reads like "insert this into
 /// the field" — the opposite of what happens here (the text goes to the private reader, never the
-/// host composer). Since the title can't be changed, the control runs icon-only and we put our own
-/// "Decrypt" label beside it. The system icon chip stays the real, consent-bearing tap target; UI
-/// tests still find it by its accessibility label.
+/// host composer). Since the title can't be changed, the control runs icon-only (a filled capsule
+/// styled through its own configuration) and we set our own "Decrypt" label beside it as a caption.
 ///
-/// ponytail: only the icon chip is tappable, not the whole pill. Making the word tappable too would
-/// mean overlaying the system control, and its privacy safeguards can silently disable an occluded
-/// control — not worth risking the one inbound-read path for a wider hit box.
+/// The chip IS the button and the whole chip is tappable: nothing is layered over the control — no
+/// SwiftUI `.overlay` (a Shape overlay is hit-testable across its frame and would steal the tap) and
+/// no obscuring view (which iOS can treat as tampering and disable the paste control). The caption
+/// sits next to the chip, never on top of it.
 struct PasteControl: View {
     var enabled: Bool
     var title: String = "Decrypt"
     var onPaste: (String?) -> Void
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 7) {
             SystemPaste(enabled: enabled, onPaste: onPaste)
-                .frame(width: 30, height: 30)
+                .frame(width: 56, height: 34)
             Text(title)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(Ink.keyboardInk)
                 .accessibilityHidden(true)
-        }
-        .padding(.leading, 6)
-        .padding(.trailing, 12)
-        .frame(maxHeight: .infinity)
-        .background(Ink.key.opacity(0.74), in: .rect(cornerRadius: 11))
-        .overlay {
-            RoundedRectangle(cornerRadius: 11, style: .continuous)
-                .strokeBorder(Ink.keyboardLine, lineWidth: 1)
         }
         .opacity(enabled ? 1 : 0.5)
     }
 }
 
 /// The system paste control itself — icon-only, so the iOS-owned "Paste" text does not compete with
-/// our "Decrypt" label. The tap lands here, not in the messenger's composer.
+/// our "Decrypt" caption. Styling lives on its `Configuration`, so the control draws its own filled
+/// chip with nothing on top to intercept the tap. The tap lands here, not in the messenger's composer.
 private struct SystemPaste: UIViewRepresentable {
     var enabled: Bool
     var onPaste: (String?) -> Void
@@ -54,7 +47,7 @@ private struct SystemPaste: UIViewRepresentable {
         let configuration = UIPasteControl.Configuration()
         configuration.displayMode = .iconOnly
         configuration.cornerStyle = .capsule
-        configuration.baseBackgroundColor = .clear
+        configuration.baseBackgroundColor = UIColor(Ink.key)
         configuration.baseForegroundColor = UIColor(Ink.keyboardInk)
 
         let control = UIPasteControl(configuration: configuration)
