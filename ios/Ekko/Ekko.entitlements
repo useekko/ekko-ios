@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- The vault lives here so the keyboard extension can read the same keys. -->
+	<!-- Sign in with Apple is NOT here: a personal (free) development team cannot carry that
+	     capability, and this file signs the day-to-day device builds. The Release config signs
+	     with Ekko-store.entitlements, which adds it. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.app.useekko</string>
+	</array>
+</dict>
+</plist>

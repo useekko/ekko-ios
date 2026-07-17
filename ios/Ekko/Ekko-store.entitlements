@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Release/store signing: everything the dev entitlements have, plus Sign in with Apple,
+	     which needs a PAID team (App Store builds always have one). Keep the two files' shared
+	     keys in step. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.app.useekko</string>
+	</array>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
+</dict>
+</plist>

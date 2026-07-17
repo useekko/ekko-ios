@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- The Safari extension keeps its OWN vault in browser storage, exactly like the Chrome
+	     build. It is in the App Group only so a future "one identity on this phone" bridge has
+	     somewhere to reach; nothing reads across today. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.app.useekko</string>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,65 @@
+# Standalone clean-room visual lab. Generate with:
+#   cd ios/KeyboardLab && xcodegen generate
+#
+# This is intentionally not a target in Ekko.xcodeproj. It can show Apple's keyboard and Ekko's
+# shared replica under one controlled host without app, vault, or keyboard-extension state.
+name: KeyboardLab
+options:
+  bundleIdPrefix: app.useekko
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGNING_ALLOWED: "NO"
+
+targets:
+  KeyboardLab:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+      # The lab does not carry a replica copy. These are the same source files compiled into the
+      # real Ekko keyboard extension by ios/project.yml.
+      - path: ../Shared/NativeKeyPlane.swift
+      - path: ../Shared/NativeEmojiPlane.swift
+      - path: ../Shared/Theme.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.useekko.keyboardlab
+        GENERATE_INFOPLIST_FILE: "YES"
+        INFOPLIST_KEY_CFBundleDisplayName: KeyboardLab
+        # Without a launch-screen declaration UIKit runs a programmatic app in 320pt legacy
+        # compatibility mode and scales both keyboards. A geometry lab must use native pixels.
+        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: "YES"
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: "NO"
+
+  KeyboardLabUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: KeyboardLab
+    settings:
+      base:
+        TEST_TARGET_NAME: KeyboardLab
+        GENERATE_INFOPLIST_FILE: "YES"
+
+schemes:
+  KeyboardLab:
+    build:
+      targets:
+        KeyboardLab: all
+        KeyboardLabUITests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - KeyboardLabUITests

@@ -1,0 +1,168 @@
+# Source of truth for Ekko.xcodeproj — regenerate with `npm run ios:gen` (xcodegen).
+# The .xcodeproj is committed too, so the project opens without installing xcodegen; edit THIS
+# file, never the pbxproj.
+#
+# Three targets, one shared core:
+#   Ekko           the app — identity, contacts, the 24-word backup, settings
+#   EkkoKeyboard   the overlay — seal inside ANY messenger's native app
+#   EkkoSafari     the Safari web extension — the Chrome extension, running in Safari
+#
+# All three read the same vault through the App Group container (EkkoStore.appGroup).
+
+name: Ekko
+options:
+  bundleIdPrefix: app.useekko
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+packages:
+  EkkoCore:
+    path: EkkoCore
+
+settings:
+  base:
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    TARGETED_DEVICE_FAMILY: "1,2"
+    # CODE_SIGNING_ALLOWED must stay YES. With it off, the ad-hoc signature is skipped and the
+    # entitlements are never embedded — which silently kills the App Group, so the app falls back
+    # to a private temp directory and the keyboard cannot see the vault at all. The whole
+    # app-plus-keyboard architecture rides on that one shared container.
+    CODE_SIGNING_ALLOWED: "YES"
+    CODE_SIGN_STYLE: Automatic
+    # The owner's team. A contributor signing onto their own device changes this one line (or
+    # sets it in Xcode: target > Signing & Capabilities > Team). It is not a secret; a team id
+    # ships inside every App Store binary.
+    DEVELOPMENT_TEAM: ZRM8H35T8U
+    # Device builds need a real identity; the simulator has no notion of one and signs ad-hoc.
+    CODE_SIGN_IDENTITY: "Apple Development"
+    CODE_SIGN_IDENTITY[sdk=iphonesimulator*]: "-"
+
+targets:
+  Ekko:
+    type: application
+    platform: iOS
+    sources:
+      - path: Ekko
+      - path: Shared
+    dependencies:
+      - package: EkkoCore
+      - target: EkkoKeyboard
+      - target: EkkoSafari
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.useekko.ios
+        PRODUCT_NAME: Ekko
+        INFOPLIST_FILE: Ekko/Info.plist
+        # Debug signs WITHOUT Sign in with Apple: a personal (free) team cannot carry that
+        # capability, and Debug is what installs on the owner's phone today. Release adds it
+        # (Ekko-store.entitlements) for the paid-team/App Store build. The app hides the Apple
+        # button at runtime when its provisioning profile lacks the entitlement, so a Debug
+        # device build shows two sign-in roads instead of one that always errors.
+        CODE_SIGN_ENTITLEMENTS: Ekko/Ekko.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_PREVIEWS: "YES"
+      configs:
+        Release:
+          CODE_SIGN_ENTITLEMENTS: Ekko/Ekko-store.entitlements
+
+  EkkoKeyboard:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: EkkoKeyboard
+      - path: Shared
+    dependencies:
+      - package: EkkoCore
+    settings:
+      base:
+        # No PRODUCT_NAME override: it would also rename the Swift module to "Ekko" and collide
+        # with the app's. The name users see in the keyboard picker is CFBundleDisplayName.
+        PRODUCT_BUNDLE_IDENTIFIER: app.useekko.ios.keyboard
+        INFOPLIST_FILE: EkkoKeyboard/Info.plist
+        CODE_SIGN_ENTITLEMENTS: EkkoKeyboard/EkkoKeyboard.entitlements
+
+  EkkoKeyboardTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: EkkoKeyboardTests
+      # A unit-test bundle cannot @testable-import an app extension, so the unit under test is
+      # compiled straight into the test target. KeyboardModel has no UIKit dependency of its own
+      # (it reaches the text field through the HostTextField protocol), which is what makes this
+      # possible — and is why the protocol exists.
+      - path: EkkoKeyboard/KeyboardModel.swift
+    dependencies:
+      - package: EkkoCore
+    settings:
+      base:
+        # Signing is on (the App Group needs it), and a signed bundle needs a plist.
+        GENERATE_INFOPLIST_FILE: "YES"
+
+  # End-to-end: drives the keyboard inside Safari, i.e. inside someone else's app. Needs the
+  # keyboard registered in the simulator first — run scripts/ios-sim-setup.sh.
+  EkkoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: EkkoUITests
+    dependencies:
+      - target: Ekko
+    settings:
+      base:
+        TEST_TARGET_NAME: Ekko
+        GENERATE_INFOPLIST_FILE: "YES"
+
+  EkkoSafari:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: EkkoSafari
+        excludes: ["Resources"]
+      # Safari looks for manifest.json at the appex ROOT, so the web files are added as plain
+      # resources (which land flat) — NOT as a `type: folder` reference, which would create a
+      # literal Resources/ directory inside the bundle. That one is a trap: a `Resources` folder
+      # makes CFBundle read the appex as a macOS-style bundle, and embedded-binary validation
+      # then fails with "Couldn't load Info dictionary".
+      - path: EkkoSafari/Resources
+        buildPhase: resources
+        excludes: ["icons", "fonts", "chunks"]
+      # …but these ARE real subdirectories the manifest references by path, so they stay folders.
+      # scripts/ios-safari-sync.mjs fails the build if esbuild ever emits one we don't list here.
+      - path: EkkoSafari/Resources/icons
+        type: folder
+        buildPhase: resources
+      - path: EkkoSafari/Resources/fonts
+        type: folder
+        buildPhase: resources
+      - path: EkkoSafari/Resources/chunks
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - sdk: SafariServices.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.useekko.ios.safari
+        INFOPLIST_FILE: EkkoSafari/Info.plist
+        CODE_SIGN_ENTITLEMENTS: EkkoSafari/EkkoSafari.entitlements
+
+schemes:
+  Ekko:
+    build:
+      targets:
+        Ekko: all
+        EkkoKeyboardTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - EkkoKeyboardTests
+        # Slow and needs scripts/ios-sim-setup.sh first — select it explicitly with
+        # -only-testing:EkkoUITests rather than running the whole suite by reflex.
+        - EkkoUITests

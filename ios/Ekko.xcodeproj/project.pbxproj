@@ -1,0 +1,1016 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02D7EF97E12018A8899FE244 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A2D5B5AF0187204B3BDA90 /* KeyboardViewController.swift */; };
+		111AC3B28E11725D35FD74BF /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F3258FDE42849F595F802C /* ContactDetailView.swift */; };
+		179966221C7BE34185A9452A /* EkkoAccountClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B459BD3200F6AEB1491CCE /* EkkoAccountClient.swift */; };
+		196C2427D6F5B91B6E21C505 /* NativeKeyPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EF92BFA10CC72D3C32276A /* NativeKeyPlane.swift */; };
+		1A5981B796F54DD900E9E23C /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 64610A00C9DDEA8D035FDF96 /* background.js */; };
+		1A683A2611690CAEDC4512B1 /* KeyPlaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7F05ABC89881DB9A1D2C92 /* KeyPlaneView.swift */; };
+		2373A364F572CD8C9503A56D /* ContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D260E82AE57300643DB0C161 /* ContactsView.swift */; };
+		2A065F4874D191D8C821B8A4 /* chunks in Resources */ = {isa = PBXBuildFile; fileRef = 1F6F757E64B490F61627917D /* chunks */; };
+		389A8A66E5FD9D3A05DD6B1D /* KeyboardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A58D1925A26329B3586969 /* KeyboardModelTests.swift */; };
+		40EE109264C389D2CA116D0D /* EkkoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2FEC84D5D0F926E700638074 /* EkkoCore */; };
+		41738D860F616FDBBF67F044 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F5553AFF8A575A19253D59 /* AccountView.swift */; };
+		44C69A0E6128B2F94D36769E /* KeyboardTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F771182F7EDEA1420697CDC /* KeyboardTestView.swift */; };
+		4E68FE54428CFCC3D8F695F5 /* IdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A9ED532AE2D158ACD28E4C /* IdentityView.swift */; };
+		4FE341595CC5703190F8BD74 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 1E245422DBEE92F492E74FFD /* manifest.json */; };
+		5A02C66BB970C636E0A0EE3E /* KeyboardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5414C95344157493F6244F0 /* KeyboardModel.swift */; };
+		60D37189BE6DFFECE93A94F1 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A50FBEB46DD32AABBF8B1CE /* ProfileView.swift */; };
+		61E0EB74F3DA7439F16C7A19 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25EB9B60E8F272E57ADA6F3 /* KeyboardView.swift */; };
+		6A5A4827871F8AF8068C59B2 /* NativeEmojiPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49FD46B69CF8365BB47FB3 /* NativeEmojiPlane.swift */; };
+		6BCC06C9B73BF552761A0B6B /* SafariLauncherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D68F9A8257657D7447732548 /* SafariLauncherTests.swift */; };
+		6E11048225AC29FD6DEA2F14 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 42987F9E4F5E6271CB02279E /* fonts */; };
+		6EC555D3DB1B0CA70EE89ACA /* account-bridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 4B162DF9B11E6519FBC25E15 /* account-bridge.js */; };
+		6EE1D2B13F6A195C428CA60A /* NativeKeyPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EF92BFA10CC72D3C32276A /* NativeKeyPlane.swift */; };
+		762DBF1282637D0B97249287 /* KeyboardInHostAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC255065A3D78E8DAB230146 /* KeyboardInHostAppTests.swift */; };
+		7A9AF19B6979F3E7A21ED756 /* KeyboardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5414C95344157493F6244F0 /* KeyboardModel.swift */; };
+		7C2C05BD8A7CA78A6599CFAC /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C46904F9DD462F7524C4FA1 /* Theme.swift */; };
+		8C5D3E316ED36E605F80A707 /* OnboardingFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9A74EA21EC0643102D083 /* OnboardingFlowTests.swift */; };
+		8D54166F683285FA3710C402 /* EkkoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDDE1893EA04A80FF29849B /* EkkoApp.swift */; };
+		9328A3E5C5D26115A8B91D15 /* AccountSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A40D87A8AC371F651E68CE2 /* AccountSync.swift */; };
+		96696488510CC8802CA4756D /* Pieces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6860EB1AC5CFE3662589BACF /* Pieces.swift */; };
+		9732728D75B0B37417EA8451 /* instagram.js in Resources */ = {isa = PBXBuildFile; fileRef = F8BE16AF5BF0184E7629F126 /* instagram.js */; };
+		9A3AC192D21ABC045397C1F8 /* EkkoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 4119109F3A219F4F43A63A68 /* EkkoCore */; };
+		A2BDF3931E3F963C95BC1B6E /* EkkoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 24B522CF060C7EB80EF3EB86 /* EkkoCore */; };
+		A990EF009195772F03D1BF48 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CA85608470937879CDF5B8 /* RootView.swift */; };
+		A99AFDB12077FB3C8976A486 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D35A675CD096CCA0DCE336F /* OnboardingView.swift */; };
+		AE1B08DE9D44912A9C50AD67 /* EkkoKeyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 15A3DDFCCDBB2357102D82BA /* EkkoKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AE270FA2AD8FDBC85C39CB82 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7239B7C74328835C8A41128D /* SafariServices.framework */; };
+		B0EC2D45C66C34D93D37D333 /* Platforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B4990D11EB45E448AE052F /* Platforms.swift */; };
+		B6F0A4F4F0039D6361FB8568 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = E0A53EFA890B21EAA5EFEF1A /* popup.js */; };
+		BA1887541FB16A1353EA8A5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B29073402795F3A9D3DB63C8 /* Assets.xcassets */; };
+		BB066A5FAC6CB242EA1C6288 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4661468B7B33DCDF7793EF1 /* HomeView.swift */; };
+		BC5A54D67F2D854F3F09C17E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C46904F9DD462F7524C4FA1 /* Theme.swift */; };
+		BF0869052E7FB73F1BC2C41A /* PasteControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EB0CB39502A0BC3343AC7A /* PasteControl.swift */; };
+		C026F013EA7D6D212E8737B5 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61068B72C2136BEA5BE1EDC /* SafariWebExtensionHandler.swift */; };
+		C1AC6F502A421B788ACA855B /* telegram.js in Resources */ = {isa = PBXBuildFile; fileRef = 57F463C464DCC92CA38DA037 /* telegram.js */; };
+		CCEB11B87862CF30ABE50BFD /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF2BD117981B4548EF32FB7 /* PeopleView.swift */; };
+		D2A17BAF9D12D5C980577902 /* onboarding.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F553B8EF0D5A247752F6AB8 /* onboarding.js */; };
+		DB64F21D296A5D1CD3F24E17 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = D03734B6E04C999DF8A82A06 /* popup.html */; };
+		DC08CFDCF71DEB341AF312B8 /* onboarding.html in Resources */ = {isa = PBXBuildFile; fileRef = 6D9B4B0ACD063EDBF14B32F7 /* onboarding.html */; };
+		E13E02818C43CC64DC698B35 /* messenger.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F627364809D37032DEF46F2 /* messenger.js */; };
+		EC1724CB790033F7758AACB9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38AFC00EE469FED8D00AF65 /* SettingsView.swift */; };
+		F291CF87B93E69CEE41BC8C4 /* EkkoSafari.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5E8F811C88105EB5277F71A6 /* EkkoSafari.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F60B0327F1F376C29E393F56 /* whatsapp.js in Resources */ = {isa = PBXBuildFile; fileRef = 51E1FEAACB10D7278F31642E /* whatsapp.js */; };
+		F63738DA3275D05B281BC6AB /* icons in Resources */ = {isa = PBXBuildFile; fileRef = D4981FD7DD37148A396774A7 /* icons */; };
+		F65542D166FC974361466D79 /* NativeEmojiPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49FD46B69CF8365BB47FB3 /* NativeEmojiPlane.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0869E46397C1DB076D4C326D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5B62595380ED047CAC02765 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCA61B21159E2FC4CC2B0B86;
+			remoteInfo = EkkoKeyboard;
+		};
+		3C4567D63DD5D0F036F6CE34 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5B62595380ED047CAC02765 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 56CD5EB3BF37ADD1ED36D530;
+			remoteInfo = EkkoSafari;
+		};
+		EC0FCD4DBD37882364E13928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5B62595380ED047CAC02765 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CBE902148AA9213B62435680;
+			remoteInfo = Ekko;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F522B8895A04C23E241ABEFD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AE1B08DE9D44912A9C50AD67 /* EkkoKeyboard.appex in Embed Foundation Extensions */,
+				F291CF87B93E69CEE41BC8C4 /* EkkoSafari.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		04A9ED532AE2D158ACD28E4C /* IdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityView.swift; sourceTree = "<group>"; };
+		0E7156116B1C746838D1012A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0F771182F7EDEA1420697CDC /* KeyboardTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardTestView.swift; sourceTree = "<group>"; };
+		15A3DDFCCDBB2357102D82BA /* EkkoKeyboard.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = EkkoKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		16B4990D11EB45E448AE052F /* Platforms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platforms.swift; sourceTree = "<group>"; };
+		1A50FBEB46DD32AABBF8B1CE /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		1E245422DBEE92F492E74FFD /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
+		1F6F757E64B490F61627917D /* chunks */ = {isa = PBXFileReference; lastKnownFileType = folder; name = chunks; path = EkkoSafari/Resources/chunks; sourceTree = SOURCE_ROOT; };
+		26F5553AFF8A575A19253D59 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		2CDDE1893EA04A80FF29849B /* EkkoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EkkoApp.swift; sourceTree = "<group>"; };
+		3B49FD46B69CF8365BB47FB3 /* NativeEmojiPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeEmojiPlane.swift; sourceTree = "<group>"; };
+		42987F9E4F5E6271CB02279E /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = EkkoSafari/Resources/fonts; sourceTree = SOURCE_ROOT; };
+		4A40D87A8AC371F651E68CE2 /* AccountSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSync.swift; sourceTree = "<group>"; };
+		4B162DF9B11E6519FBC25E15 /* account-bridge.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "account-bridge.js"; sourceTree = "<group>"; };
+		4C14701802F95AE1BEC1BDC3 /* Ekko.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Ekko.entitlements; sourceTree = "<group>"; };
+		51E1FEAACB10D7278F31642E /* whatsapp.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = whatsapp.js; sourceTree = "<group>"; };
+		52A2D5B5AF0187204B3BDA90 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		57F463C464DCC92CA38DA037 /* telegram.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = telegram.js; sourceTree = "<group>"; };
+		5E8F811C88105EB5277F71A6 /* EkkoSafari.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = EkkoSafari.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EF2BD117981B4548EF32FB7 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
+		64610A00C9DDEA8D035FDF96 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
+		65A58D1925A26329B3586969 /* KeyboardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardModelTests.swift; sourceTree = "<group>"; };
+		6860EB1AC5CFE3662589BACF /* Pieces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pieces.swift; sourceTree = "<group>"; };
+		68F3258FDE42849F595F802C /* ContactDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
+		69118D13D15734BC8B9302C0 /* EkkoKeyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EkkoKeyboard.entitlements; sourceTree = "<group>"; };
+		6C46904F9DD462F7524C4FA1 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		6D9B4B0ACD063EDBF14B32F7 /* onboarding.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = onboarding.html; sourceTree = "<group>"; };
+		6F553B8EF0D5A247752F6AB8 /* onboarding.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = onboarding.js; sourceTree = "<group>"; };
+		6F627364809D37032DEF46F2 /* messenger.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = messenger.js; sourceTree = "<group>"; };
+		7239B7C74328835C8A41128D /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		8A3133462B6B58E105422F15 /* Ekko-store.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ekko-store.entitlements"; sourceTree = "<group>"; };
+		8C7F05ABC89881DB9A1D2C92 /* KeyPlaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPlaneView.swift; sourceTree = "<group>"; };
+		8D35A675CD096CCA0DCE336F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		9339562A65FE0F7C28281D75 /* EkkoUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = EkkoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9372CE599B75287E044BF719 /* EkkoSafari.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EkkoSafari.entitlements; sourceTree = "<group>"; };
+		93CA85608470937879CDF5B8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		95B459BD3200F6AEB1491CCE /* EkkoAccountClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EkkoAccountClient.swift; sourceTree = "<group>"; };
+		A2D028996D6064A1116FC5BB /* Ekko.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Ekko.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5414C95344157493F6244F0 /* KeyboardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardModel.swift; sourceTree = "<group>"; };
+		A5EB0CB39502A0BC3343AC7A /* PasteControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteControl.swift; sourceTree = "<group>"; };
+		A8AFD5FA89B018ECBA533A5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B29073402795F3A9D3DB63C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B61068B72C2136BEA5BE1EDC /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		BC255065A3D78E8DAB230146 /* KeyboardInHostAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardInHostAppTests.swift; sourceTree = "<group>"; };
+		C38AFC00EE469FED8D00AF65 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C4661468B7B33DCDF7793EF1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C6FFA7771397C483BE3563C9 /* EkkoCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EkkoCore; path = EkkoCore; sourceTree = SOURCE_ROOT; };
+		D03734B6E04C999DF8A82A06 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
+		D260E82AE57300643DB0C161 /* ContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsView.swift; sourceTree = "<group>"; };
+		D4981FD7DD37148A396774A7 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = EkkoSafari/Resources/icons; sourceTree = SOURCE_ROOT; };
+		D68F9A8257657D7447732548 /* SafariLauncherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariLauncherTests.swift; sourceTree = "<group>"; };
+		E0A53EFA890B21EAA5EFEF1A /* popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = popup.js; sourceTree = "<group>"; };
+		E52BF54F3030DBE94DDB8F2C /* EkkoKeyboardTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = EkkoKeyboardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5E9A74EA21EC0643102D083 /* OnboardingFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowTests.swift; sourceTree = "<group>"; };
+		F25EB9B60E8F272E57ADA6F3 /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
+		F6EF92BFA10CC72D3C32276A /* NativeKeyPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeKeyPlane.swift; sourceTree = "<group>"; };
+		F8BE16AF5BF0184E7629F126 /* instagram.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = instagram.js; sourceTree = "<group>"; };
+		FE1D968ECACDCE67F0EF3D3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		031CCDD6B1157FE392B49B27 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40EE109264C389D2CA116D0D /* EkkoCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6075D381763350C7E29DB23E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2BDF3931E3F963C95BC1B6E /* EkkoCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		89D96DFAF04341C8E90C683B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A3AC192D21ABC045397C1F8 /* EkkoCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB0D9EDC26553A49E2900C3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE270FA2AD8FDBC85C39CB82 /* SafariServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		02020EB4DDE8A18C708A72BA /* EkkoKeyboardTests */ = {
+			isa = PBXGroup;
+			children = (
+				65A58D1925A26329B3586969 /* KeyboardModelTests.swift */,
+			);
+			path = EkkoKeyboardTests;
+			sourceTree = "<group>";
+		};
+		0349B30BBF079B14D75D125E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				3B49FD46B69CF8365BB47FB3 /* NativeEmojiPlane.swift */,
+				F6EF92BFA10CC72D3C32276A /* NativeKeyPlane.swift */,
+				6C46904F9DD462F7524C4FA1 /* Theme.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		28B171E6EC8733A247B1C9C2 /* EkkoKeyboard */ = {
+			isa = PBXGroup;
+			children = (
+				69118D13D15734BC8B9302C0 /* EkkoKeyboard.entitlements */,
+				0E7156116B1C746838D1012A /* Info.plist */,
+				A5414C95344157493F6244F0 /* KeyboardModel.swift */,
+				F25EB9B60E8F272E57ADA6F3 /* KeyboardView.swift */,
+				52A2D5B5AF0187204B3BDA90 /* KeyboardViewController.swift */,
+				8C7F05ABC89881DB9A1D2C92 /* KeyPlaneView.swift */,
+				A5EB0CB39502A0BC3343AC7A /* PasteControl.swift */,
+			);
+			path = EkkoKeyboard;
+			sourceTree = "<group>";
+		};
+		6FB85D16CAAD27D021806C53 /* EkkoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				BC255065A3D78E8DAB230146 /* KeyboardInHostAppTests.swift */,
+				E5E9A74EA21EC0643102D083 /* OnboardingFlowTests.swift */,
+				D68F9A8257657D7447732548 /* SafariLauncherTests.swift */,
+			);
+			path = EkkoUITests;
+			sourceTree = "<group>";
+		};
+		7648CB599C19C59B6075C4EA /* Ekko */ = {
+			isa = PBXGroup;
+			children = (
+				4A40D87A8AC371F651E68CE2 /* AccountSync.swift */,
+				26F5553AFF8A575A19253D59 /* AccountView.swift */,
+				B29073402795F3A9D3DB63C8 /* Assets.xcassets */,
+				68F3258FDE42849F595F802C /* ContactDetailView.swift */,
+				D260E82AE57300643DB0C161 /* ContactsView.swift */,
+				8A3133462B6B58E105422F15 /* Ekko-store.entitlements */,
+				4C14701802F95AE1BEC1BDC3 /* Ekko.entitlements */,
+				95B459BD3200F6AEB1491CCE /* EkkoAccountClient.swift */,
+				2CDDE1893EA04A80FF29849B /* EkkoApp.swift */,
+				C4661468B7B33DCDF7793EF1 /* HomeView.swift */,
+				04A9ED532AE2D158ACD28E4C /* IdentityView.swift */,
+				A8AFD5FA89B018ECBA533A5E /* Info.plist */,
+				0F771182F7EDEA1420697CDC /* KeyboardTestView.swift */,
+				8D35A675CD096CCA0DCE336F /* OnboardingView.swift */,
+				5EF2BD117981B4548EF32FB7 /* PeopleView.swift */,
+				6860EB1AC5CFE3662589BACF /* Pieces.swift */,
+				16B4990D11EB45E448AE052F /* Platforms.swift */,
+				1A50FBEB46DD32AABBF8B1CE /* ProfileView.swift */,
+				93CA85608470937879CDF5B8 /* RootView.swift */,
+				C38AFC00EE469FED8D00AF65 /* SettingsView.swift */,
+			);
+			path = Ekko;
+			sourceTree = "<group>";
+		};
+		8C8D0D2069CE221228F2D50A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7239B7C74328835C8A41128D /* SafariServices.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A477699D22E47FCD9C720BEB /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				C6FFA7771397C483BE3563C9 /* EkkoCore */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		D73D14D5594EB99398475196 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4B162DF9B11E6519FBC25E15 /* account-bridge.js */,
+				64610A00C9DDEA8D035FDF96 /* background.js */,
+				1F6F757E64B490F61627917D /* chunks */,
+				42987F9E4F5E6271CB02279E /* fonts */,
+				D4981FD7DD37148A396774A7 /* icons */,
+				F8BE16AF5BF0184E7629F126 /* instagram.js */,
+				1E245422DBEE92F492E74FFD /* manifest.json */,
+				6F627364809D37032DEF46F2 /* messenger.js */,
+				6D9B4B0ACD063EDBF14B32F7 /* onboarding.html */,
+				6F553B8EF0D5A247752F6AB8 /* onboarding.js */,
+				D03734B6E04C999DF8A82A06 /* popup.html */,
+				E0A53EFA890B21EAA5EFEF1A /* popup.js */,
+				57F463C464DCC92CA38DA037 /* telegram.js */,
+				51E1FEAACB10D7278F31642E /* whatsapp.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		DC9A95159219201F08C147C2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2D028996D6064A1116FC5BB /* Ekko.app */,
+				15A3DDFCCDBB2357102D82BA /* EkkoKeyboard.appex */,
+				E52BF54F3030DBE94DDB8F2C /* EkkoKeyboardTests.xctest */,
+				5E8F811C88105EB5277F71A6 /* EkkoSafari.appex */,
+				9339562A65FE0F7C28281D75 /* EkkoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EAF2671D5768BE7827BDE2BC /* EkkoSafari */ = {
+			isa = PBXGroup;
+			children = (
+				D73D14D5594EB99398475196 /* Resources */,
+				9372CE599B75287E044BF719 /* EkkoSafari.entitlements */,
+				FE1D968ECACDCE67F0EF3D3E /* Info.plist */,
+				B61068B72C2136BEA5BE1EDC /* SafariWebExtensionHandler.swift */,
+			);
+			path = EkkoSafari;
+			sourceTree = "<group>";
+		};
+		F0719CAE8ACC5CFEC4D5B425 = {
+			isa = PBXGroup;
+			children = (
+				7648CB599C19C59B6075C4EA /* Ekko */,
+				28B171E6EC8733A247B1C9C2 /* EkkoKeyboard */,
+				02020EB4DDE8A18C708A72BA /* EkkoKeyboardTests */,
+				EAF2671D5768BE7827BDE2BC /* EkkoSafari */,
+				6FB85D16CAAD27D021806C53 /* EkkoUITests */,
+				A477699D22E47FCD9C720BEB /* Packages */,
+				0349B30BBF079B14D75D125E /* Shared */,
+				8C8D0D2069CE221228F2D50A /* Frameworks */,
+				DC9A95159219201F08C147C2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		30A0D9E86929307AA0A6F351 /* EkkoKeyboardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1AF68E9D46D824958868B91 /* Build configuration list for PBXNativeTarget "EkkoKeyboardTests" */;
+			buildPhases = (
+				77A5E022DE7714AB9AC461D4 /* Sources */,
+				6075D381763350C7E29DB23E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EkkoKeyboardTests;
+			packageProductDependencies = (
+				24B522CF060C7EB80EF3EB86 /* EkkoCore */,
+			);
+			productName = EkkoKeyboardTests;
+			productReference = E52BF54F3030DBE94DDB8F2C /* EkkoKeyboardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		56CD5EB3BF37ADD1ED36D530 /* EkkoSafari */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5654FDAAF81F35E7ED7CBBB3 /* Build configuration list for PBXNativeTarget "EkkoSafari" */;
+			buildPhases = (
+				24A0A3067E8DFBD790250095 /* Sources */,
+				B98498D5B79AD4E841B040E0 /* Resources */,
+				DB0D9EDC26553A49E2900C3A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EkkoSafari;
+			packageProductDependencies = (
+			);
+			productName = EkkoSafari;
+			productReference = 5E8F811C88105EB5277F71A6 /* EkkoSafari.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		9E7FD6E4190382D479580DE1 /* EkkoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 57A093E64A8052F918723CBC /* Build configuration list for PBXNativeTarget "EkkoUITests" */;
+			buildPhases = (
+				6D1E64C2C15CBE51DD397A2A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				71D27DBB57C22389875618A4 /* PBXTargetDependency */,
+			);
+			name = EkkoUITests;
+			packageProductDependencies = (
+			);
+			productName = EkkoUITests;
+			productReference = 9339562A65FE0F7C28281D75 /* EkkoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		CBE902148AA9213B62435680 /* Ekko */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 290749D4AB85507F36F93CBA /* Build configuration list for PBXNativeTarget "Ekko" */;
+			buildPhases = (
+				0D817453F238CC29369E23D9 /* Sources */,
+				52BF47BFC447A97621FB9045 /* Resources */,
+				031CCDD6B1157FE392B49B27 /* Frameworks */,
+				F522B8895A04C23E241ABEFD /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F891CD62AD18B610441ED7D0 /* PBXTargetDependency */,
+				50BF1F2C8FBAC6B4A71E1E06 /* PBXTargetDependency */,
+			);
+			name = Ekko;
+			packageProductDependencies = (
+				2FEC84D5D0F926E700638074 /* EkkoCore */,
+			);
+			productName = Ekko;
+			productReference = A2D028996D6064A1116FC5BB /* Ekko.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FCA61B21159E2FC4CC2B0B86 /* EkkoKeyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1704A31E4BB104B987A2704 /* Build configuration list for PBXNativeTarget "EkkoKeyboard" */;
+			buildPhases = (
+				FE7B2950BC850A526D387A03 /* Sources */,
+				89D96DFAF04341C8E90C683B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EkkoKeyboard;
+			packageProductDependencies = (
+				4119109F3A219F4F43A63A68 /* EkkoCore */,
+			);
+			productName = EkkoKeyboard;
+			productReference = 15A3DDFCCDBB2357102D82BA /* EkkoKeyboard.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D5B62595380ED047CAC02765 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					30A0D9E86929307AA0A6F351 = {
+						DevelopmentTeam = ZRM8H35T8U;
+						ProvisioningStyle = Automatic;
+					};
+					56CD5EB3BF37ADD1ED36D530 = {
+						DevelopmentTeam = ZRM8H35T8U;
+						ProvisioningStyle = Automatic;
+					};
+					9E7FD6E4190382D479580DE1 = {
+						DevelopmentTeam = ZRM8H35T8U;
+						ProvisioningStyle = Automatic;
+						TestTargetID = CBE902148AA9213B62435680;
+					};
+					CBE902148AA9213B62435680 = {
+						DevelopmentTeam = ZRM8H35T8U;
+						ProvisioningStyle = Automatic;
+					};
+					FCA61B21159E2FC4CC2B0B86 = {
+						DevelopmentTeam = ZRM8H35T8U;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = AC24E7C1525734CECC7F3C0A /* Build configuration list for PBXProject "Ekko" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F0719CAE8ACC5CFEC4D5B425;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9EE5589C1F986B51A085DCF8 /* XCLocalSwiftPackageReference "EkkoCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DC9A95159219201F08C147C2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CBE902148AA9213B62435680 /* Ekko */,
+				FCA61B21159E2FC4CC2B0B86 /* EkkoKeyboard */,
+				30A0D9E86929307AA0A6F351 /* EkkoKeyboardTests */,
+				56CD5EB3BF37ADD1ED36D530 /* EkkoSafari */,
+				9E7FD6E4190382D479580DE1 /* EkkoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		52BF47BFC447A97621FB9045 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA1887541FB16A1353EA8A5C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B98498D5B79AD4E841B040E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EC555D3DB1B0CA70EE89ACA /* account-bridge.js in Resources */,
+				1A5981B796F54DD900E9E23C /* background.js in Resources */,
+				2A065F4874D191D8C821B8A4 /* chunks in Resources */,
+				6E11048225AC29FD6DEA2F14 /* fonts in Resources */,
+				F63738DA3275D05B281BC6AB /* icons in Resources */,
+				9732728D75B0B37417EA8451 /* instagram.js in Resources */,
+				4FE341595CC5703190F8BD74 /* manifest.json in Resources */,
+				E13E02818C43CC64DC698B35 /* messenger.js in Resources */,
+				DC08CFDCF71DEB341AF312B8 /* onboarding.html in Resources */,
+				D2A17BAF9D12D5C980577902 /* onboarding.js in Resources */,
+				DB64F21D296A5D1CD3F24E17 /* popup.html in Resources */,
+				B6F0A4F4F0039D6361FB8568 /* popup.js in Resources */,
+				C1AC6F502A421B788ACA855B /* telegram.js in Resources */,
+				F60B0327F1F376C29E393F56 /* whatsapp.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0D817453F238CC29369E23D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9328A3E5C5D26115A8B91D15 /* AccountSync.swift in Sources */,
+				41738D860F616FDBBF67F044 /* AccountView.swift in Sources */,
+				111AC3B28E11725D35FD74BF /* ContactDetailView.swift in Sources */,
+				2373A364F572CD8C9503A56D /* ContactsView.swift in Sources */,
+				179966221C7BE34185A9452A /* EkkoAccountClient.swift in Sources */,
+				8D54166F683285FA3710C402 /* EkkoApp.swift in Sources */,
+				BB066A5FAC6CB242EA1C6288 /* HomeView.swift in Sources */,
+				4E68FE54428CFCC3D8F695F5 /* IdentityView.swift in Sources */,
+				44C69A0E6128B2F94D36769E /* KeyboardTestView.swift in Sources */,
+				6A5A4827871F8AF8068C59B2 /* NativeEmojiPlane.swift in Sources */,
+				196C2427D6F5B91B6E21C505 /* NativeKeyPlane.swift in Sources */,
+				A99AFDB12077FB3C8976A486 /* OnboardingView.swift in Sources */,
+				CCEB11B87862CF30ABE50BFD /* PeopleView.swift in Sources */,
+				96696488510CC8802CA4756D /* Pieces.swift in Sources */,
+				B0EC2D45C66C34D93D37D333 /* Platforms.swift in Sources */,
+				60D37189BE6DFFECE93A94F1 /* ProfileView.swift in Sources */,
+				A990EF009195772F03D1BF48 /* RootView.swift in Sources */,
+				EC1724CB790033F7758AACB9 /* SettingsView.swift in Sources */,
+				7C2C05BD8A7CA78A6599CFAC /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		24A0A3067E8DFBD790250095 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C026F013EA7D6D212E8737B5 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D1E64C2C15CBE51DD397A2A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				762DBF1282637D0B97249287 /* KeyboardInHostAppTests.swift in Sources */,
+				8C5D3E316ED36E605F80A707 /* OnboardingFlowTests.swift in Sources */,
+				6BCC06C9B73BF552761A0B6B /* SafariLauncherTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77A5E022DE7714AB9AC461D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A9AF19B6979F3E7A21ED756 /* KeyboardModel.swift in Sources */,
+				389A8A66E5FD9D3A05DD6B1D /* KeyboardModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE7B2950BC850A526D387A03 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A683A2611690CAEDC4512B1 /* KeyPlaneView.swift in Sources */,
+				5A02C66BB970C636E0A0EE3E /* KeyboardModel.swift in Sources */,
+				61E0EB74F3DA7439F16C7A19 /* KeyboardView.swift in Sources */,
+				02D7EF97E12018A8899FE244 /* KeyboardViewController.swift in Sources */,
+				F65542D166FC974361466D79 /* NativeEmojiPlane.swift in Sources */,
+				6EE1D2B13F6A195C428CA60A /* NativeKeyPlane.swift in Sources */,
+				BF0869052E7FB73F1BC2C41A /* PasteControl.swift in Sources */,
+				BC5A54D67F2D854F3F09C17E /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		50BF1F2C8FBAC6B4A71E1E06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 56CD5EB3BF37ADD1ED36D530 /* EkkoSafari */;
+			targetProxy = 3C4567D63DD5D0F036F6CE34 /* PBXContainerItemProxy */;
+		};
+		71D27DBB57C22389875618A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CBE902148AA9213B62435680 /* Ekko */;
+			targetProxy = EC0FCD4DBD37882364E13928 /* PBXContainerItemProxy */;
+		};
+		F891CD62AD18B610441ED7D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCA61B21159E2FC4CC2B0B86 /* EkkoKeyboard */;
+			targetProxy = 0869E46397C1DB076D4C326D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		126A061B6FBDFB99E6C0EED2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Ekko/Ekko-store.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Ekko/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.ios;
+				PRODUCT_NAME = Ekko;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		19B9D76C724FEF0CD8B179C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = EkkoKeyboard/EkkoKeyboard.entitlements;
+				INFOPLIST_FILE = EkkoKeyboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.ios.keyboard;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		201C9B2F8756CBC43058A210 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = EkkoKeyboard/EkkoKeyboard.entitlements;
+				INFOPLIST_FILE = EkkoKeyboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.ios.keyboard;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		35E9B8145FD827A5BB5E7000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ZRM8H35T8U;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3B6D49770C213221BCC2D9D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Ekko/Ekko.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Ekko/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.ios;
+				PRODUCT_NAME = Ekko;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		688FE226817E7BE114E5CB6B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.EkkoUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Ekko;
+			};
+			name = Release;
+		};
+		7798BAF5ED77B742519C3534 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.EkkoKeyboardTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7963F5A82EA4A8A5F6D4634F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ZRM8H35T8U;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B1EBD689D78F008990AA1C6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.EkkoKeyboardTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D783F7B280D1B1F48B878D48 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = EkkoSafari/EkkoSafari.entitlements;
+				INFOPLIST_FILE = EkkoSafari/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.ios.safari;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E397360287DCD805860FD801 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = EkkoSafari/EkkoSafari.entitlements;
+				INFOPLIST_FILE = EkkoSafari/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.ios.safari;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F4A9629363BAEE9EA0D61EEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.useekko.EkkoUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Ekko;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		290749D4AB85507F36F93CBA /* Build configuration list for PBXNativeTarget "Ekko" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3B6D49770C213221BCC2D9D3 /* Debug */,
+				126A061B6FBDFB99E6C0EED2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5654FDAAF81F35E7ED7CBBB3 /* Build configuration list for PBXNativeTarget "EkkoSafari" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D783F7B280D1B1F48B878D48 /* Debug */,
+				E397360287DCD805860FD801 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		57A093E64A8052F918723CBC /* Build configuration list for PBXNativeTarget "EkkoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4A9629363BAEE9EA0D61EEE /* Debug */,
+				688FE226817E7BE114E5CB6B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AC24E7C1525734CECC7F3C0A /* Build configuration list for PBXProject "Ekko" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35E9B8145FD827A5BB5E7000 /* Debug */,
+				7963F5A82EA4A8A5F6D4634F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C1704A31E4BB104B987A2704 /* Build configuration list for PBXNativeTarget "EkkoKeyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19B9D76C724FEF0CD8B179C2 /* Debug */,
+				201C9B2F8756CBC43058A210 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E1AF68E9D46D824958868B91 /* Build configuration list for PBXNativeTarget "EkkoKeyboardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7798BAF5ED77B742519C3534 /* Debug */,
+				B1EBD689D78F008990AA1C6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		9EE5589C1F986B51A085DCF8 /* XCLocalSwiftPackageReference "EkkoCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = EkkoCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		24B522CF060C7EB80EF3EB86 /* EkkoCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EkkoCore;
+		};
+		2FEC84D5D0F926E700638074 /* EkkoCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EkkoCore;
+		};
+		4119109F3A219F4F43A63A68 /* EkkoCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EkkoCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D5B62595380ED047CAC02765 /* Project object */;
+}
