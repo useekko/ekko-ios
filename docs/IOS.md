@@ -91,14 +91,16 @@ four-part preamble.
 
 Safari uses the Ekko web extension to decrypt supported web messengers in place. Native apps do
 not expose their incoming-message UI to a keyboard, so reading there is one explicit copy action:
-long-press the sealed bubble, Copy, then tap the iOS-owned **Paste** control in the Ekko keyboard.
+long-press the sealed bubble, Copy, then tap the keyboard's **Decrypt** control. It is Apple's
+iOS-owned `UIPasteControl` run icon-only (the system title is always "Paste", which can't be
+changed) with our own "Decrypt" label beside it, so the affordance reads as what it does.
 `UIPasteControl` transfers the copied string only after that tap, avoiding direct clipboard reads
 and the recurring permission/nil behavior they cause on modern iOS. The keyboard opens the token
 with the same `Engine.ingest` path as the iOS app (wire-compatible with the Safari extension).
 
 Reading replaces the keys with an opaque, scrollable private reader; plaintext never enters the
 messenger's composer. The reader shows sender/status context, actionable errors, multi-chunk
-progress with **Paste next**, and **Reply** or **Done**. Closing it or leaving the keyboard clears
+progress with **Decrypt** for the next part, and **Reply** or **Done**. Closing it or leaving the keyboard clears
 the displayed plaintext. Readers still accept legacy in-chat handshakes for compatibility, but
 current iOS senders never create one.
 

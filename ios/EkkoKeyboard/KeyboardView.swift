@@ -4,7 +4,7 @@ import UIKit
 
 // Ekko has two deliberate states inside one fixed keyboard envelope:
 //
-//   compose -> recipient, Paste, Seal, then a familiar QWERTY plane
+//   compose -> recipient, Decrypt, Seal, then a familiar QWERTY plane
 //   read    -> a private full-height reader; plaintext never enters the host composer
 //
 // Keeping the height constant prevents the messenger from jumping when a copied message opens.
@@ -85,7 +85,7 @@ private struct ActionBar: View {
             Spacer(minLength: 0)
 
             PasteControl(enabled: model.canDecrypt) { model.decrypt($0) }
-                .frame(width: 88, height: 34)
+                .frame(height: 34)
                 .accessibilityIdentifier("ekko-decrypt")
 
             if model.locked, model.contact != nil, model.queue == nil {
@@ -133,7 +133,7 @@ private struct StatusBar: View {
             Spacer(minLength: 2)
 
             PasteControl(enabled: model.canDecrypt) { model.decrypt($0) }
-                .frame(width: 82, height: 34)
+                .frame(height: 34)
                 .accessibilityIdentifier("ekko-decrypt")
 
             Button { model.status = nil } label: {
@@ -263,7 +263,7 @@ private struct QueueRow: View {
             Spacer(minLength: 0)
 
             PasteControl(enabled: model.canDecrypt) { model.decrypt($0) }
-                .frame(width: 82, height: 34)
+                .frame(height: 34)
                 .accessibilityIdentifier("ekko-decrypt")
 
             Button { model.cancelQueue() } label: {
@@ -513,7 +513,7 @@ private struct ReaderHeader: View {
         case .message: "Decrypted only on this iPhone"
         case .secureChannel: "Ready for protected messages"
         case .invited: "Public key added on this iPhone"
-        case .needMoreChunks: "Copy and Paste the next bubble"
+        case .needMoreChunks: "Copy the next bubble, then Decrypt"
         case .unknownSession, .failed: "Your copied text was not changed"
         case .none: ""
         }
@@ -579,7 +579,7 @@ private struct ReaderContent: View {
                 ReaderNotice(
                     icon: "square.stack.3d.up.fill",
                     title: "Keep going",
-                    message: "This encrypted message has \(total) parts. Copy the next bubble, then tap Paste below.",
+                    message: "This encrypted message has \(total) parts. Copy the next bubble, then tap Decrypt below.",
                     tint: Ink.warning,
                     progress: Double(have) / Double(max(total, 1))
                 )
@@ -655,7 +655,7 @@ private struct ReaderFooter: View {
     var body: some View {
         HStack(spacing: 9) {
             PasteControl(enabled: model.canDecrypt) { model.decrypt($0) }
-                .frame(width: 94, height: 36)
+                .frame(height: 36)
                 .accessibilityIdentifier("ekko-decrypt-next")
 
             Text(pastePrompt)

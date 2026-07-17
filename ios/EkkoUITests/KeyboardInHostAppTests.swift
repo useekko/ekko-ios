@@ -107,7 +107,7 @@ final class KeyboardInHostAppTests: XCTestCase {
         let paste = safari.descendants(matching: .any)
             .matching(
                 NSPredicate(
-                    format: "label == 'Paste copied Ekko message' OR label == 'Paste'"))
+                    format: "label == 'Decrypt copied Ekko message' OR label == 'Paste'"))
             .firstMatch
         XCTAssertTrue(paste.waitForExistence(timeout: 5), "no system Paste action appeared")
         paste.tap()

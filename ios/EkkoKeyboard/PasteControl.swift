@@ -1,13 +1,48 @@
 import SwiftUI
 import UIKit
 
-/// Apple's paste control is the reliable clipboard boundary for a keyboard extension. The tap is
-/// explicit user consent, so iOS hands the copied text to Ekko without a recurring "Allow Paste?"
-/// prompt and without a speculative `UIPasteboard.general.string` read returning nil.
+/// The keyboard's Decrypt control. It is built on Apple's `UIPasteControl` because that is the only
+/// clipboard boundary a keyboard extension gets without a recurring "Allow Paste?" prompt or a nil
+/// `UIPasteboard.general.string` read — the tap itself is the consent that hands Ekko the copied text.
 ///
-/// Its visible label intentionally remains system-owned ("Paste"). The keyboard chrome explains
-/// that pasting here opens an Ekko message rather than inserting it into the host composer.
-struct PasteControl: UIViewRepresentable {
+/// iOS owns the system control's title and it is always "Paste", which reads like "insert this into
+/// the field" — the opposite of what happens here (the text goes to the private reader, never the
+/// host composer). Since the title can't be changed, the control runs icon-only and we put our own
+/// "Decrypt" label beside it. The system icon chip stays the real, consent-bearing tap target; UI
+/// tests still find it by its accessibility label.
+///
+/// ponytail: only the icon chip is tappable, not the whole pill. Making the word tappable too would
+/// mean overlaying the system control, and its privacy safeguards can silently disable an occluded
+/// control — not worth risking the one inbound-read path for a wider hit box.
+struct PasteControl: View {
+    var enabled: Bool
+    var title: String = "Decrypt"
+    var onPaste: (String?) -> Void
+
+    var body: some View {
+        HStack(spacing: 6) {
+            SystemPaste(enabled: enabled, onPaste: onPaste)
+                .frame(width: 30, height: 30)
+            Text(title)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(Ink.keyboardInk)
+                .accessibilityHidden(true)
+        }
+        .padding(.leading, 6)
+        .padding(.trailing, 12)
+        .frame(maxHeight: .infinity)
+        .background(Ink.key.opacity(0.74), in: .rect(cornerRadius: 11))
+        .overlay {
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .strokeBorder(Ink.keyboardLine, lineWidth: 1)
+        }
+        .opacity(enabled ? 1 : 0.5)
+    }
+}
+
+/// The system paste control itself — icon-only, so the iOS-owned "Paste" text does not compete with
+/// our "Decrypt" label. The tap lands here, not in the messenger's composer.
+private struct SystemPaste: UIViewRepresentable {
     var enabled: Bool
     var onPaste: (String?) -> Void
 
@@ -17,15 +52,15 @@ struct PasteControl: UIViewRepresentable {
 
     func makeUIView(context: Context) -> UIPasteControl {
         let configuration = UIPasteControl.Configuration()
-        configuration.displayMode = .iconAndLabel
+        configuration.displayMode = .iconOnly
         configuration.cornerStyle = .capsule
-        configuration.baseBackgroundColor = UIColor(Ink.key)
+        configuration.baseBackgroundColor = .clear
         configuration.baseForegroundColor = UIColor(Ink.keyboardInk)
 
         let control = UIPasteControl(configuration: configuration)
         control.target = context.coordinator
-        control.accessibilityLabel = "Paste copied Ekko message"
-        control.accessibilityHint = "Decrypts the copied message without putting it in the text field"
+        control.accessibilityLabel = "Decrypt copied Ekko message"
+        control.accessibilityHint = "Opens the copied message in the reader without putting it in the text field"
         control.setContentHuggingPriority(.required, for: .horizontal)
         control.setContentCompressionResistancePriority(.required, for: .horizontal)
         return control
@@ -34,13 +69,10 @@ struct PasteControl: UIViewRepresentable {
     func updateUIView(_ view: UIPasteControl, context: Context) {
         context.coordinator.onPaste = onPaste
         view.isUserInteractionEnabled = enabled
-        view.alpha = enabled ? 1 : 0.42
-        // UIPasteControl copies its configuration into an immutable object at initialization.
-        // The UIColor values above are dynamic already, so no appearance refresh is needed here.
     }
 
-    /// The paste lands here, not in the messenger's composer. Loading only NSString also prevents
-    /// an image, URL object, or other rich clipboard payload from wandering into the decrypt path.
+    /// Loading only NSString prevents an image, URL object, or other rich clipboard payload from
+    /// wandering into the decrypt path.
     final class Coordinator: UIResponder {
         var onPaste: (String?) -> Void
 
