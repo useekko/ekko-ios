@@ -1,0 +1,11 @@
+.DS_Store
+*.zip
+
+# Xcode / SwiftPM build state
+DerivedData/
+*.xcresult
+ios/**/xcuserdata/
+ios/EkkoCore/.build/
+
+# Generated from ekko-core's build (npm run ios:safari there) — never committed
+ios/EkkoSafari/Resources/
