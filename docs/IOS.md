@@ -115,8 +115,9 @@ evicted when the phone locks) and excluded from backups.
 
 The browser vault is a scrypt-passphrase-encrypted blob because `chrome.storage.local` is
 plaintext. iOS gives us Data Protection for free, so there is **no passphrase to type** — which is
-also the only thing that makes the keyboard usable. Contacts and sessions do not need to port
-between devices; the phrase re-derives the identity and a fresh handshake re-establishes sessions.
+also the only thing that makes the keyboard usable. The separate, opt-in account backup carries
+contacts and session keys as well as the phrase: the phrase can derive the identity again, but only
+the original sessions can open message history sealed before the restore.
 
 ## Build, run, test
 
@@ -328,11 +329,12 @@ Answers "how do my keys get to my new phone?" without breaking the answer to "ca
 messages?" (no).
 
 - **Format:** `src/core/backup.ts` (TypeScript) and `EkkoCore/Backup.swift` (Swift) — the same
-  envelope, `{v, kdf, iter, salt, nonce, ct}`. XChaCha20-Poly1305 over the 24 words + contacts,
-  under a PBKDF2-HMAC-SHA256 (600k) key.
+  envelope, `{v, kdf, iter, salt, nonce, ct}`. XChaCha20-Poly1305 over the 24 words + contacts +
+  history-opening sessions, under a PBKDF2-HMAC-SHA256 (600k) key. Pending handshake replay state
+  stays local; browser `threadId` / `acct` metadata rides through iOS unchanged.
 - **`npm run ios:interop` proves both directions**: a blob sealed by the *browser extension* opens
-  on the *phone*, and vice versa, contacts and timestamps intact. Without that, "back up here,
-  restore there" is a guess.
+  on the *phone*, and vice versa, contacts, timestamps, session bytes and opaque routing metadata
+  intact. Without that, "back up here, restore there" is a guess.
 - **PBKDF2, not the vault's scrypt**, because CryptoKit and swift-crypto ship no scrypt and porting
   it means hand-writing Salsa20/8. PBKDF2 is fast on a GPU, so the KDF is *not* what protects you —
   the **generated six-word passphrase** (~77 bits) is. A user-chosen passphrase sits behind an
@@ -343,8 +345,8 @@ messages?" (no).
   identity yet — offering it only after onboarding would be offering it too late.
 - `Engine.restore(backup:passphrase:)` keeps each contact's original `addedAt` and `verified` flag.
   Routing them through `addContact` would stamp them all with today and silently drop the
-  verification the user did by comparing safety numbers. Sessions are *not* in the blob: account
-  sync or the off-grid return invitation re-establishes them before another message is sealed.
+  verification the user did by comparing safety numbers. It also adopts every well-formed session
+  independently; a bad row is skipped, and a sessions-less v1 blob remains valid.
 
 Server side (table, RLS, and three traps that cost real time): `docs/ACCOUNTS.md`.
 
@@ -354,10 +356,6 @@ Server side (table, RLS, and three traps that cost real time): `docs/ACCOUNTS.md
   one), looking peers up, and the `linkPlatform` / `handleStatus` flows all exist in the browser
   extension and in the server, but the iOS app does invite-based (paste / QR) contact exchange plus
   the *account*-side handle above. `EkkoCrypto.answerKeyChallenge` is ported and ready for it.
-- **The browser extension cannot back up or restore yet.** `src/core/backup.ts` is built, tested and
-  interop-proven, but the extension has no account sign-in (it would need Supabase auth via
-  `chrome.identity.launchWebAuthFlow`), so nothing calls it there. Until that lands, the way to put
-  the same identity in the extension and the app is the 24 words — which is exact, and works today.
 - **The account path is not covered end to end by a test.** Registration is closed (invite-only), so
   `OnboardingFlowTests` drives the *off-grid* road all the way through and asserts the fork offers
   both mode cards, that the handle road leads to Apple + Google + email sign-in, and that no handle

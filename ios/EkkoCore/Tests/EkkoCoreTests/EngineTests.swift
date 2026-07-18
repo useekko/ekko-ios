@@ -116,6 +116,35 @@ struct EngineTests {
         #expect(second[0].hasPrefix("EKK1M:"))
     }
 
+    @Test("an account session backs up threadless and restores old messages")
+    func accountSessionBackup() throws {
+        let alice = try scratchEngine()
+        let bob = try scratchEngine()
+        try alice.createIdentity()
+        try bob.createIdentity()
+        let bobC = try alice.addContact(invite: bob.invite!, label: "Bob")
+        _ = try bob.addContact(invite: try alice.prepareSetup(to: bobC)!, label: "Alice")
+
+        // AccountSync calls this after the setup mailbox owns the wire. The iOS-local `ios:`
+        // routing key must not leak into the browser field, while the account marker must.
+        try alice.markSetupPublished(to: bobC)
+        let old = try alice.seal(to: bobC, plaintext: "before restore")
+        let passphrase = "account backup test passphrase"
+        let blob = try alice.sealBackup(passphrase: passphrase)
+        let payload = try Backup.open(blob, passphrase: passphrase)
+        #expect(payload.sessions.count == 1)
+        #expect(payload.sessions.first?.threadId == nil)
+        #expect(payload.sessions.first?.acct == true)
+
+        let restored = try scratchEngine()
+        #expect(try restored.restore(backup: blob, passphrase: passphrase) == 1)
+        guard case .message(let text, _, _) = try restored.ingest(old[0]) else {
+            Issue.record("restored account session did not open its pre-restore message")
+            return
+        }
+        #expect(text == "before restore")
+    }
+
     @Test("a whole multi-message paste reassembles in one shot")
     func multiTokenPaste() throws {
         let alice = try scratchEngine()

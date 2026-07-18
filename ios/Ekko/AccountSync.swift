@@ -72,8 +72,10 @@ enum AccountSync {
                             senderKey: myKey,
                             recipientKey: peerKey,
                             handshake: setup)
-                        try engine.markSetupPublished(to: provisional)
                     }
+                    // Also marks sessions published by an older build. The marker makes their
+                    // thread-less backup form usable (rather than legacy-quarantined) in a browser.
+                    try engine.markSetupPublished(to: provisional)
                 }
 
                 guard c.status == "accepted" else { continue }

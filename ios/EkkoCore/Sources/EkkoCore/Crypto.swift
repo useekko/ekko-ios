@@ -62,6 +62,12 @@ public struct Session: Sendable, Codable, Equatable {
     public var peerFingerprint: Data
     /// Local only. Keeps a session negotiated for one conversation out of another.
     public var threadId: String?
+    /// Browser-only routing metadata carried through account backups. iOS keeps its own local
+    /// `threadId` above, so this value must remain separate and opaque here.
+    public var browserThreadId: String?
+    /// The browser's marker for a session established through the account setup mailbox.
+    /// It is transport metadata, not cryptographic input, and iOS only preserves it for backup.
+    public var acct: Bool?
     /// Local only. The app publishes this setup out of band, then keeps only the derived keys.
     /// Legacy in-chat setup still clears it when authenticated peer traffic arrives.
     public var handshakeWire: Data?

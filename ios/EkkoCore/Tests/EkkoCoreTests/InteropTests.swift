@@ -46,13 +46,24 @@ struct Vectors: Decodable {
         let kind: String?
         let standalone: Bool
     }
+    struct BackupSessionVec: Decodable {
+        let id: String
+        let key0to1: String
+        let key1to0: String
+        let myParty: Int
+        let peerFingerprint: String
+        let threadId: String
+        let acct: Bool
+    }
     struct BackupVec: Decodable {
         let passphrase: String
         let blob: Backup.Blob
+        let legacyBlob: Backup.Blob
         let expectedMnemonic: String
         let expectedContactBundle: String
         let expectedContactLabel: String
         let expectedContactAddedAt: Double
+        let expectedSession: BackupSessionVec
     }
 
     let phraseA: String
@@ -247,6 +258,7 @@ struct InteropTests {
 
         #expect(payload.mnemonic == v.expectedMnemonic)
         #expect(payload.contacts.count == 1)
+        #expect(payload.sessions.count == 1)
 
         let contacts = Backup.contacts(from: payload)
         #expect(contacts.first?.bundle.hexString == v.expectedContactBundle)
@@ -261,6 +273,83 @@ struct InteropTests {
         // And the identity it carries really is the one it claims to be.
         let restored = try Recovery.deviceIdentity(phrase: payload.mnemonic)
         #expect(restored.bundle.hexString == vectors.deviceA.bundle)
+
+        // Session bytes and browser-only metadata must arrive exactly as TypeScript sealed them.
+        let sessions = Backup.sessions(from: payload)
+        #expect(sessions.count == 1)
+        #expect(sessions.first?.id.hexString == v.expectedSession.id)
+        #expect(sessions.first?.key0to1.hexString == v.expectedSession.key0to1)
+        #expect(sessions.first?.key1to0.hexString == v.expectedSession.key1to0)
+        #expect(sessions.first.map { Int($0.myParty) } == v.expectedSession.myParty)
+        #expect(sessions.first?.peerFingerprint.hexString == v.expectedSession.peerFingerprint)
+        #expect(sessions.first?.browserThreadId == v.expectedSession.threadId)
+        #expect(sessions.first?.acct == v.expectedSession.acct)
+    }
+
+    @Test("a sessions-less v1 TypeScript backup still opens with an empty session list")
+    func legacyBackupFromTypeScript() throws {
+        let v = vectors.backup
+        let payload = try Backup.open(v.legacyBlob, passphrase: v.passphrase)
+        #expect(payload.mnemonic == v.expectedMnemonic)
+        #expect(payload.sessions.isEmpty)
+        #expect(Backup.sessions(from: payload).isEmpty)
+    }
+
+    @Test("one malformed backup session is skipped without sinking its neighbors")
+    func malformedBackupSessionIsLossy() throws {
+        let opened = try Backup.open(vectors.backup.blob, passphrase: vectors.backup.passphrase)
+        let good = try #require(opened.sessions.first)
+
+        // A structurally damaged row must not make Payload decoding all-or-nothing.
+        let goodObject = try #require(
+            try JSONSerialization.jsonObject(with: JSONEncoder().encode(good)) as? [String: Any])
+        let wire: [String: Any] = [
+            "v": opened.v,
+            "mnemonic": opened.mnemonic,
+            "contacts": [],
+            "sessions": [["id": 7], goodObject],
+        ]
+        let lossy = try JSONDecoder().decode(
+            Backup.Payload.self, from: JSONSerialization.data(withJSONObject: wire))
+        #expect(lossy.sessions == [good])
+
+        // Structurally valid base64url still has to describe the exact protocol widths.
+        var shortKey = good
+        shortKey.key0to1 = b64u(Data(repeating: 0, count: 31))
+        var mixed = lossy
+        mixed.sessions = [shortKey, good]
+        let adopted = Backup.sessions(from: mixed)
+        #expect(adopted.count == 1)
+        #expect(adopted.first?.id.hexString == vectors.backup.expectedSession.id)
+    }
+
+    @Test("a TypeScript session restores into the engine and survives a phone re-backup")
+    func backupSessionEngineRoundTrip() throws {
+        let dir = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("ekko-backup-interop-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+
+        let engine = EkkoEngine(store: EkkoStore(directory: dir))
+        #expect(try engine.restore(
+            backup: vectors.backup.blob, passphrase: vectors.backup.passphrase) == 1)
+        engine.reload()  // prove the opaque metadata made it through the on-disk Codable vault too
+        let contact = try #require(engine.contacts.first)
+        #expect(engine.hasSession(with: contact))
+
+        // This body was sealed before the phone restored, under the session inside the TS blob.
+        let oldMessage = Wire.formatMessage(hexData(vectors.tsToSwift.messageBody))
+        guard case .message(let plaintext, _, _) = try engine.ingest(oldMessage) else {
+            Issue.record("restored session did not open pre-restore history")
+            return
+        }
+        #expect(plaintext == vectors.tsToSwift.expectedPlaintext)
+
+        let resealed = try engine.sealBackup(passphrase: vectors.backup.passphrase)
+        let reopened = try Backup.open(resealed, passphrase: vectors.backup.passphrase)
+        let carried = try #require(reopened.sessions.first)
+        #expect(carried.threadId == vectors.backup.expectedSession.threadId)
+        #expect(carried.acct == vectors.backup.expectedSession.acct)
     }
 
     @Test("a wrong passphrase does not open a TypeScript-sealed backup")
@@ -314,8 +403,12 @@ struct InteropTests {
         let peer = Contact(
             bundle: peerBundle, label: "Alice", verified: false,
             addedAt: Date(timeIntervalSince1970: 1_700_000_000))
+        var backedSession = session
+        backedSession.browserThreadId = "telegram:swift-backup-interop"
+        backedSession.acct = true
         let backupBlob = try Backup.seal(
             mnemonic: vectors.phraseB, contacts: [peer],
+            sessions: [backedSession],
             passphrase: vectors.backup.passphrase)
 
         let payload: [String: Any] = [
@@ -325,6 +418,15 @@ struct InteropTests {
             "sessionId": session.id.hexString,
             "deviceBBundle": me.bundle.hexString,
             "inviteB": Wire.formatInvite(me.bundle),
+            "backupSession": [
+                "id": backedSession.id.hexString,
+                "key0to1": backedSession.key0to1.hexString,
+                "key1to0": backedSession.key1to0.hexString,
+                "myParty": Int(backedSession.myParty),
+                "peerFingerprint": backedSession.peerFingerprint.hexString,
+                "threadId": backedSession.browserThreadId!,
+                "acct": backedSession.acct!,
+            ],
             "backupBlob": [
                 "v": backupBlob.v,
                 "kdf": backupBlob.kdf,

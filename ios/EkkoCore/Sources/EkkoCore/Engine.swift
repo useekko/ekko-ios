@@ -109,18 +109,18 @@ public final class EkkoEngine {
 
     // MARK: - Encrypted backup
 
-    /// Seal this device's identity and contacts into the blob that may sit on a server. Requires
-    /// the 24 words to be present: a vault restored from a raw key (there is no such path today)
-    /// could not be backed up, and failing loudly beats writing a blob that restores to nothing.
+    /// Seal this device's identity, contacts and history-opening sessions into the blob that may
+    /// sit on a server. Requires the 24 words to be present: a vault restored from a raw key (there
+    /// is no such path today) could not be backed up, and failing loudly beats writing a blob that
+    /// restores to nothing.
     public func sealBackup(passphrase: String) throws -> Backup.Blob {
         guard let mnemonic = vault?.mnemonic, !mnemonic.isEmpty else { throw EngineError.noPhrase }
-        return try Backup.seal(mnemonic: mnemonic, contacts: contacts, passphrase: passphrase)
+        return try Backup.seal(
+            mnemonic: mnemonic, contacts: contacts, sessions: vault?.sessions ?? [],
+            passphrase: passphrase)
     }
 
-    /// Open a backup and become the identity inside it, contacts and all.
-    ///
-    /// Sessions are NOT restored (the blob never carried them): account sync or the invitation flow
-    /// re-establishes them before the next message. The keyboard never sends setup into a chat.
+    /// Open a backup and become the identity inside it, contacts and sessions included.
     ///
     /// This OVERWRITES whatever identity is on the device. The UI must only offer it where there is
     /// nothing to lose (a fresh install) or where the user has been told plainly.
@@ -137,6 +137,14 @@ public final class EkkoEngine {
             $0.label.localizedCaseInsensitiveCompare($1.label) == .orderedAscending
         }
         vault?.contacts = contacts
+        // Browser thread IDs are opaque backup metadata. Route every valid restored capability
+        // through iOS's per-contact scope locally while retaining the browser value separately for
+        // a later restore -> re-seal cycle.
+        var sessions = Backup.sessions(from: payload)
+        for i in sessions.indices {
+            sessions[i].threadId = threadId(forPeerFingerprint: sessions[i].peerFingerprint)
+        }
+        vault?.sessions = sessions
         try persist()
         return contacts.count
     }
@@ -218,7 +226,11 @@ public final class EkkoEngine {
 
     /// One conversation per contact on this device. The wire carries the session id, so a session
     /// started here coexists with whatever the browser extension negotiated for the same peer.
-    private func threadId(for c: Contact) -> String { "ios:\(c.id)" }
+    private func threadId(for c: Contact) -> String { threadId(forPeerFingerprint: c.fingerprint) }
+
+    private func threadId(forPeerFingerprint fingerprint: Data) -> String {
+        "ios:\(fingerprint.hexString)"
+    }
 
     private func put(_ s: Session) {
         guard var v = vault else { return }
@@ -267,10 +279,12 @@ public final class EkkoEngine {
     /// check keeps a swapped backend row from creating or selecting a different recipient.
     public func acceptSetup(_ raw: String, from c: Contact) throws {
         guard contacts.contains(where: { $0.id == c.id }) else { throw EngineError.unknownContact }
-        _ = try acceptSetup(raw, expected: c, label: nil)
+        _ = try acceptSetup(raw, expected: c, label: nil, account: true)
     }
 
-    private func acceptSetup(_ raw: String, expected: Contact?, label: String?) throws -> Contact {
+    private func acceptSetup(
+        _ raw: String, expected: Contact?, label: String?, account: Bool = false
+    ) throws -> Contact {
         guard let me = identity,
               let token = Wire.classifyStandalone(raw) ?? Wire.classify(raw),
               token.kind == .handshake
@@ -281,7 +295,12 @@ public final class EkkoEngine {
         if let expected, expected.bundle != bundle { throw EngineError.wrongSetup }
         let peer = try addPeer(bundle: bundle, label: expected?.label ?? label)
         session.threadId = threadId(for: peer)
-        if vault?.sessions.contains(where: { $0.id == session.id }) != true { put(session) }
+        if account { session.acct = true }
+        if let i = vault?.sessions.firstIndex(where: { $0.id == session.id }) {
+            if account { vault?.sessions[i].acct = true }
+        } else {
+            put(session)
+        }
         vault?.lastContact = peer.id
         try persist()
         return peer
@@ -291,9 +310,10 @@ public final class EkkoEngine {
     public func markSetupPublished(to c: Contact) throws {
         let tid = threadId(for: c)
         guard let i = vault?.sessions.lastIndex(where: {
-            $0.peerFingerprint.hexString == c.id && $0.threadId == tid && $0.handshakeWire != nil
+            $0.peerFingerprint.hexString == c.id && $0.threadId == tid
         }) else { return }
         vault?.sessions[i].handshakeWire = nil
+        vault?.sessions[i].acct = true
         try persist()
     }
 

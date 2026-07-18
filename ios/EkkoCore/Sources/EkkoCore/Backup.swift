@@ -66,10 +66,97 @@ public enum Backup {
         public var addedAt: Double
     }
 
+    /// A session as it travels inside the blob. `handshakeWire` is deliberately absent: it is
+    /// pending-delivery state, while these keys are the capability that opens message history.
+    ///
+    /// `threadId` and `acct` belong to the browser's routing model. iOS does not interpret them,
+    /// but it must preserve both so restoring and then backing up on a phone does not strip state
+    /// that a later browser restore needs.
+    public struct BackedUpSession: Codable, Sendable, Equatable {
+        public var id: String  // base64url, 8 bytes
+        public var key0to1: String  // base64url, 32 bytes
+        public var key1to0: String  // base64url, 32 bytes
+        public var myParty: Int  // the reference restore normalizes 1 to 1 and everything else to 0
+        public var peerFingerprint: String  // base64url, 32 bytes
+        public var threadId: String?
+        public var acct: Bool?
+
+        public init(
+            id: String, key0to1: String, key1to0: String, myParty: Int,
+            peerFingerprint: String, threadId: String? = nil, acct: Bool? = nil
+        ) {
+            self.id = id
+            self.key0to1 = key0to1
+            self.key1to0 = key1to0
+            self.myParty = myParty
+            self.peerFingerprint = peerFingerprint
+            self.threadId = threadId
+            self.acct = acct
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case id, key0to1, key1to0, myParty, peerFingerprint, threadId, acct
+        }
+
+        public init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            id = try c.decode(String.self, forKey: .id)
+            key0to1 = try c.decode(String.self, forKey: .key0to1)
+            key1to0 = try c.decode(String.self, forKey: .key1to0)
+            myParty = try c.decode(Int.self, forKey: .myParty)
+            peerFingerprint = try c.decode(String.self, forKey: .peerFingerprint)
+            // Match the TypeScript restore's `typeof` checks: bad optional metadata is ignored,
+            // while malformed key material makes only this entry lossy (see Payload below).
+            threadId = try? c.decode(String.self, forKey: .threadId)
+            acct = try? c.decode(Bool.self, forKey: .acct)
+        }
+    }
+
     public struct Payload: Codable, Sendable, Equatable {
         public var v: Int
         public var mnemonic: String
         public var contacts: [BackedUpContact]
+        /// Empty for v1 blobs written before sessions joined the additive payload.
+        public var sessions: [BackedUpSession]
+
+        public init(
+            v: Int, mnemonic: String, contacts: [BackedUpContact],
+            sessions: [BackedUpSession] = []
+        ) {
+            self.v = v
+            self.mnemonic = mnemonic
+            self.contacts = contacts
+            self.sessions = sessions
+        }
+
+        private enum CodingKeys: String, CodingKey { case v, mnemonic, contacts, sessions }
+
+        private struct LossySession: Decodable {
+            let value: BackedUpSession?
+
+            init(from decoder: Decoder) {
+                value = try? BackedUpSession(from: decoder)
+            }
+        }
+
+        public init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            v = try c.decode(Int.self, forKey: .v)
+            mnemonic = try c.decode(String.self, forKey: .mnemonic)
+            contacts = try c.decode([BackedUpContact].self, forKey: .contacts)
+            // A missing field is an old blob. A malformed element is skipped independently so one
+            // damaged session never prevents the identity and every other session from restoring.
+            sessions = (try? c.decode([LossySession].self, forKey: .sessions))?
+                .compactMap(\.value) ?? []
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var c = encoder.container(keyedBy: CodingKeys.self)
+            try c.encode(v, forKey: .v)
+            try c.encode(mnemonic, forKey: .mnemonic)
+            try c.encode(contacts, forKey: .contacts)
+            try c.encode(sessions, forKey: .sessions)
+        }
     }
 
     // MARK: - Passphrase
@@ -89,7 +176,7 @@ public enum Backup {
     // MARK: - Seal / open
 
     public static func seal(
-        mnemonic: String, contacts: [Contact], passphrase: String
+        mnemonic: String, contacts: [Contact], sessions: [Session] = [], passphrase: String
     ) throws -> Blob {
         guard passphrase.count >= minPassphraseLength else { throw Error.passphraseTooShort }
         let salt = random(16)
@@ -105,6 +192,20 @@ public enum Backup {
                     label: $0.label,
                     verified: $0.verified,
                     addedAt: $0.addedAt.timeIntervalSince1970 * 1000)
+            },
+            sessions: sessions.map {
+                BackedUpSession(
+                    id: b64u($0.id),
+                    key0to1: b64u($0.key0to1),
+                    key1to0: b64u($0.key1to0),
+                    myParty: Int($0.myParty),
+                    peerFingerprint: b64u($0.peerFingerprint),
+                    // A restored browser scope wins. The fallback supports sessions constructed
+                    // directly with a browser-like scope while keeping iOS's private `ios:` route
+                    // out of the shared format.
+                    threadId: $0.browserThreadId
+                        ?? $0.threadId.flatMap { $0.hasPrefix("ios:") ? nil : $0 },
+                    acct: $0.acct)
             })
 
         let plaintext = try JSONEncoder().encode(payload)
@@ -154,6 +255,27 @@ public enum Backup {
             return Contact(
                 bundle: bundle, label: c.label, verified: c.verified,
                 addedAt: Date(timeIntervalSince1970: c.addedAt / 1000))
+        }
+    }
+
+    /// Valid sessions from an opened payload, back as the type the vault stores. Each row stands
+    /// alone: invalid base64url or a wrong byte length drops that row and nothing else.
+    public static func sessions(from payload: Payload) -> [Session] {
+        payload.sessions.compactMap { s in
+            guard let id = b64uDecode(s.id), id.count == Proto.sid,
+                let key0to1 = b64uDecode(s.key0to1), key0to1.count == 32,
+                let key1to0 = b64uDecode(s.key1to0), key1to0.count == 32,
+                let peerFingerprint = b64uDecode(s.peerFingerprint), peerFingerprint.count == 32
+            else { return nil }
+
+            return Session(
+                id: id,
+                key0to1: key0to1,
+                key1to0: key1to0,
+                myParty: s.myParty == 1 ? 1 : 0,
+                peerFingerprint: peerFingerprint,
+                browserThreadId: s.threadId,
+                acct: s.acct)
         }
     }
 
